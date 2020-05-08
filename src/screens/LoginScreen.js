@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Text, View ,StyleSheet,TouchableOpacity } from 'react-native'
 
 import CustomButton from '../components/CustomButton'
+import CustomInput from '../components/CustomInput'
 
 class LoginScreen extends Component {
     render() {
@@ -20,11 +21,21 @@ class LoginScreen extends Component {
                 </View> 
 
                 <View style={styles.formBlock}>
-                   
+                    <View style={styles.formInput}>
+                        <CustomInput secureTextEntry={false} placeholder="Phone number , username or email"/>
+                    </View>
+                    <View style={{marginTop:'3%'}}>
+                        <CustomInput secureTextEntry={true} placeholder="password"/>
+                    </View>
+                    <View style={styles.loginBtn}>
+                        <CustomButton btnTitle="Log in"/>
+                    </View>
                 </View>  
 
                 <View style={styles.forgetBlock}>
-                   
+                   <TouchableOpacity>
+                        <Text style={styles.forgotText}>Forgot password?</Text>
+                   </TouchableOpacity>
                 </View>
 
                 <View style={styles.signUpLinkBlock}>
@@ -65,7 +76,7 @@ const styles=StyleSheet.create({
         height:'5%',
         marginLeft:'5%',
         justifyContent:'center',
-        alignItems:'center'
+        alignItems:'center',
     },
 
     orText:{
@@ -74,16 +85,31 @@ const styles=StyleSheet.create({
 
     formBlock:{
         width:'90%',
-        height:'45%',
+        height:'35%',
         marginLeft:'5%',
-        backgroundColor:'blue'
+    },
+
+    formInput:{
+        marginTop:'10%'
+    },
+
+    loginBtn:{
+        width:'100%',
+        height:'19%',
+        marginTop:'5%',
     },
 
     forgetBlock:{
         width:'90%',
-        height:'15%',
+        height:'25%',
         marginLeft:'5%',
-        backgroundColor:'pink'
+        justifyContent:'flex-start',
+        alignItems:'center'
+    },
+
+    forgotText:{
+        color:'blue',
+        fontSize:16
     },
 
     signUpLinkBlock:{
