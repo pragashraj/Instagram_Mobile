@@ -1,8 +1,10 @@
 import React from 'react'
-import { View, Text ,StyleSheet , Image} from 'react-native'
+import { View, Text ,StyleSheet , Image , TouchableOpacity} from 'react-native'
 
 import settingimage from '../../src/assets/icons/settingimage.png'
 import CustomButton from '../components/CustomButton'
+
+
 
 const ProfileScreen = () => {
     return (
@@ -11,9 +13,10 @@ const ProfileScreen = () => {
                 <View style={styles.usernmeBlock}>
                     <Text style={styles.username}>user_name</Text>
                 </View>
-                <View style={styles.settings}>
+                
+               <TouchableOpacity style={styles.settings}>
                     <Image source={settingimage} style={styles.settingImage}/>
-                </View>
+               </TouchableOpacity>
             </View>
 
             <View style={styles.headerMain}>
@@ -42,12 +45,31 @@ const ProfileScreen = () => {
             </View>
 
             <View style={styles.highlightsBlock}>
+                <Text style={styles.highlightText01}>Story Highlights</Text>
+                <Text style={styles.highlightText02}>Keep your favourite stories here</Text>
+
+                <TouchableOpacity style={styles.addBlock}>
+                    <Image source={require('../assets/icons/add.png')} style={styles.add}/>
+                </TouchableOpacity>
             </View>
 
             <View style={styles.LinkBlock}>
+                <TouchableOpacity style={true ? styles.gridBlock :styles.gridBlock02}>
+                    <View>
+                        <Image source={require('../assets/icons/grid.png')} style={ true ? null:styles.grid} />
+                    </View>
+                </TouchableOpacity>
+
+                <TouchableOpacity style={false ? styles.gridBlock :styles.gridBlock02}>
+                    <View>
+                        <Image source={require('../assets/icons/cal.png')} style={ false ? null:styles.grid} />
+                    </View>
+                </TouchableOpacity>
             </View>
 
             <View style={styles.contentsBlock}>
+                <Text style={styles.contentTitle}>Profile</Text>
+                <Text style={styles.message}>When you share photos & videos they'll be here</Text>
             </View>
         </View>
     )
@@ -79,7 +101,7 @@ const styles=StyleSheet.create({
         width:'20%',
         height:'100%',
         justifyContent:'center',
-        alignItems:'center'
+        alignItems:'center',
     },
 
     settingImage:{
@@ -131,22 +153,74 @@ const styles=StyleSheet.create({
 
     highlightsBlock:{
         width:'100%',
-        height:'20%',
-        backgroundColor:'blue'
+        height:'22%',
+        borderBottomWidth:0.5,
+    },
+
+    highlightText01:{
+        fontWeight:'bold',
+        fontSize:20,
+        marginTop:'2%',
+        marginLeft:'3%'
+    },
+
+    highlightText02:{
+        fontSize:17,
+        marginTop:'1%',
+        marginLeft:'3%',
+        opacity:0.5
+    },
+
+    addBlock:{
+        width:'60%',
+        height:'60%'
+    },
+
+    add:{
+        marginLeft:'1%'
     },
 
     LinkBlock:{
         width:'100%',
-        height:'9%',
-        backgroundColor:'silver'
+        height:'7%',
+        flexDirection:'row'
+    },
+
+    gridBlock:{
+        width:'50%',
+        height:'100%',
+        alignItems:'center',
+        justifyContent:'center',
+        borderBottomWidth:1,
+    },
+
+    gridBlock02:{
+        width:'50%',
+        height:'100%',
+        alignItems:'center',
+        justifyContent:'center',
+    },
+
+    grid:{
+        opacity:0.6
     },
 
     contentsBlock:{
         width:'96%',
         height:'35%',
         marginLeft:'2%',
-        backgroundColor:'violet'
-    }
+    },
+
+    contentTitle:{
+        fontSize:35,
+        alignSelf:'center',
+        marginTop:'1%'
+    },
+
+    message:{
+        alignSelf:'center',
+        opacity:0.5
+    },
 })
 
 
