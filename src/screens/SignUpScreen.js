@@ -64,7 +64,7 @@ const styles=StyleSheet.create({
 
     instaText:{
         fontFamily:'Precious',
-        fontSize:50,
+        fontSize:30,
         marginTop:'5%'
     },
 
@@ -115,7 +115,7 @@ const styles=StyleSheet.create({
         width:'90%',
         height:'20%',
         marginLeft:'5%',
-        justifyContent:'flex-start',
+        justifyContent:'center',
         alignItems:'center'
     },
 

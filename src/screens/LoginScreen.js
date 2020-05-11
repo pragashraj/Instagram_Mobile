@@ -103,7 +103,7 @@ const styles=StyleSheet.create({
         width:'90%',
         height:'25%',
         marginLeft:'5%',
-        justifyContent:'flex-start',
+        justifyContent:'center',
         alignItems:'center'
     },
 
