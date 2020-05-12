@@ -1,11 +1,14 @@
 import React from 'react'
-import { View, Text, StyleSheet , TouchableOpacity } from 'react-native'
+import { View, Text, StyleSheet , TouchableOpacity ,Image} from 'react-native'
 
-const CustomButton = ({btnTitle}) => {
+const CustomButton = ({btnTitle,icon}) => {
     return (
         <TouchableOpacity>
             <View style={styles.container}>
-            <Text style={styles.btnText}>{btnTitle}</Text>
+                {
+                    icon ? <Image source={require('../assets/icons/fb.png')}/> :null
+                }
+                <Text style={styles.btnText}>{btnTitle}</Text>
             </View>
         </TouchableOpacity>
     )
@@ -18,7 +21,8 @@ const styles=StyleSheet.create({
         height:'100%',
         borderRadius:6,
         justifyContent:'center',
-        alignItems:'center'
+        alignItems:'center',
+        flexDirection:'row'
 
     },
 

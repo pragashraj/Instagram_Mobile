@@ -41,7 +41,7 @@ const ProfileScreen = () => {
             </View>
 
             <View style={styles.editProfileBlock}>
-                <CustomButton btnTitle="Edit Profile" />
+                <CustomButton btnTitle="Edit Profile" icon={false} />
             </View>
 
             <View style={styles.highlightsBlock}>

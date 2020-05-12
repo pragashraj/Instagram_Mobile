@@ -14,7 +14,7 @@ class SignUpScreen extends Component {
                 </View>
 
                 <View style={styles.btnBlock}>
-                    <CustomButton btnTitle="Log in With Facebook"/>
+                    <CustomButton btnTitle="Log in With Facebook" icon={true}/>
                 </View>
 
                 <View style={styles.orBlock}>
@@ -39,7 +39,7 @@ class SignUpScreen extends Component {
                         </View>
 
                         <View style={styles.loginBtn}>
-                            <CustomButton btnTitle="Sign up"/>
+                            <CustomButton btnTitle="Sign up" icon={false}/>
                         </View>
                 </View>
 

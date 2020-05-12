@@ -13,7 +13,7 @@ class LoginScreen extends Component {
                 </View>
 
                 <View style={styles.btnBlock}>
-                    <CustomButton btnTitle="Continue With Facebook"/>
+                    <CustomButton btnTitle="Continue With Facebook" icon={true}/>
                 </View>
 
                 <View style={styles.orBlock}>
@@ -28,7 +28,7 @@ class LoginScreen extends Component {
                         <CustomInput secureTextEntry={true} placeholder="password"/>
                     </View>
                     <View style={styles.loginBtn}>
-                        <CustomButton btnTitle="Log in"/>
+                        <CustomButton btnTitle="Log in" icon={false}/>
                     </View>
                 </View>  
 
