@@ -2,6 +2,7 @@ import React from 'react'
 import { View, Text , StyleSheet , Image , TouchableOpacity} from 'react-native'
 
 import Post from '../components/Post'
+import StoryComponent from '../components/StoryComponent'
 
 const HomeScreen = () => {
     return (
@@ -25,10 +26,11 @@ const HomeScreen = () => {
             </View>
 
             <View style={styles.stories}>
-                <TouchableOpacity style={styles.addBlock}>
-                    <Image source={require('../assets/icons/add.png')} style={styles.add}/>
-                </TouchableOpacity>
+                <View style={styles.story}>
+                    <StoryComponent/>
+                </View>
             </View>
+
             <View style={styles.posts}>
                 <Post/>
             </View>
@@ -43,7 +45,6 @@ const styles=StyleSheet.create({
         height:'10%',
         flexDirection:'row',
         borderBottomWidth:0.2,
-        backgroundColor:'lightgray'
     },
 
     camera:{
@@ -75,12 +76,18 @@ const styles=StyleSheet.create({
 
     stories:{
         width:'100%',
-        height:'17%',
-        justifyContent:'center'
+        height:'15%',
+        justifyContent:'center',
+        backgroundColor:'white'
     },
+    story:{
+        width:'20%',
+        height:'80%',
+    },
+
     posts:{
         width:'100%',
-        height:'73%',
+        height:'75%',
     }
 })
 

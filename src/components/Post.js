@@ -11,7 +11,7 @@ class Post extends Component {
                     </View>
 
                     <View style={styles.postHolderBlock}>
-                        <Text style={styles.postHolder}>postHolder</Text>
+                        <Text style={styles.postHolder}>PostHolder</Text>
                     </View>
 
                     <View style={styles.moreBlock}>
@@ -62,7 +62,7 @@ const styles=StyleSheet.create({
         flexDirection:'row',
         alignItems:'center',
         borderTopWidth:0.2,
-        backgroundColor:'lightgray',
+        backgroundColor:'white',
     },
 
     proImageBlock:{
@@ -85,7 +85,6 @@ const styles=StyleSheet.create({
 
     postHolder:{
         fontSize:17,
-        fontWeight:'bold'
     },
 
     moreBlock:{
@@ -108,7 +107,7 @@ const styles=StyleSheet.create({
     userAction:{
         width:'100%',
         height:'10%',
-        backgroundColor:'lightgray',
+        backgroundColor:'white',
         flexDirection:'row',
         alignItems:'center',
         paddingLeft:'2%'
@@ -121,7 +120,8 @@ const styles=StyleSheet.create({
     likesCountBlock:{
         width:'100%',
         height:'10%',
-        justifyContent:'center'
+        justifyContent:'center',
+        backgroundColor:'white'
     },
 
     likesCount:{
@@ -133,8 +133,9 @@ const styles=StyleSheet.create({
     commentsBlock:{
         width:'100%',
         height:'10%',
-        backgroundColor:'yellow',
-        justifyContent:'center'
+        justifyContent:'center',
+        backgroundColor:'white',
+        borderBottomWidth:0.2
     },
 
     comments:{
