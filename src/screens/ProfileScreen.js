@@ -8,7 +8,7 @@ import CustomButton from '../components/CustomButton'
 
 const ProfileScreen = () => {
     return (
-        <View>
+        <View style={styles.container}>
             <View style={styles.header}>
                 <View style={styles.usernmeBlock}>
                     <Text style={styles.username}>user_name</Text>
@@ -80,6 +80,11 @@ const ProfileScreen = () => {
 
 
 const styles=StyleSheet.create({
+
+    container:{
+        backgroundColor:'white'
+    },
+
     header:{
         width:'100%',
         height:'9%',
