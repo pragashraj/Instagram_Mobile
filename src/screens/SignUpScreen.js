@@ -4,7 +4,36 @@ import { Text, View ,StyleSheet } from 'react-native'
 import CustomButton from '../components/CustomButton'
 import CustomInput from '../components/CustomInput'
 
+import {auth} from '../config/config'
+
 class SignUpScreen extends Component {
+
+    state={
+        email:'',
+        fullName:'',
+        userName:'',
+        password:''
+    }
+
+    handleTextInput=(e,placeholder)=>{
+        switch(placeholder){
+            case "Phone number  or email":this.setState({email:e})
+            case "Full Name":this.setState({fullName:e})
+            case "UserName":this.setState({userName:e})
+            case "password":this.setState({password:e})
+            default : return null
+        }
+    }
+
+    handleRegister=()=>{
+        const {email,password}=this.state
+        auth.createUserWithEmailAndPassword(email,password).then(
+            (user)=>console.warn(user)
+        ).catch(
+            (err)=>console.warn(err)
+        )
+    }
+
     render() {
         return (
             <View>
@@ -23,23 +52,23 @@ class SignUpScreen extends Component {
 
                 <View style={styles.formBlock}>
                         <View style={styles.formInput}>
-                            <CustomInput secureTextEntry={false} placeholder="Phone number  or email"/>
+                            <CustomInput secureTextEntry={false} placeholder="Phone number  or email" handleTextInput={this.handleTextInput}/>
                         </View>
 
                         <View style={{marginTop:'3%'}}>
-                            <CustomInput secureTextEntry={false} placeholder="Full Name"/>
+                            <CustomInput secureTextEntry={false} placeholder="Full Name" handleTextInput={this.handleTextInput}/>
                         </View>
 
                         <View style={{marginTop:'3%'}}>
-                            <CustomInput secureTextEntry={false} placeholder="UserName"/>
+                            <CustomInput secureTextEntry={false} placeholder="UserName" handleTextInput={this.handleTextInput}/>
                         </View>
 
                         <View style={{marginTop:'3%'}}>
-                            <CustomInput secureTextEntry={true} placeholder="password"/>
+                            <CustomInput secureTextEntry={true} placeholder="password" handleTextInput={this.handleTextInput}/>
                         </View>
 
                         <View style={styles.loginBtn}>
-                            <CustomButton btnTitle="Sign up" icon={false}/>
+                            <CustomButton btnTitle="Sign up" icon={false} handleRegister={this.handleRegister}/>
                         </View>
                 </View>
 

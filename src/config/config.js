@@ -13,7 +13,7 @@ const config={
 
 firebase.initializeApp(config)
 
-export const firebase=firebase
+export const fbase=firebase
 export const database=firebase.database()
 export const auth=firebase.auth()
 export const storage=firebase.storage()

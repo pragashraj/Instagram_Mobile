@@ -4,7 +4,32 @@ import { Text, View ,StyleSheet,TouchableOpacity } from 'react-native'
 import CustomButton from '../components/CustomButton'
 import CustomInput from '../components/CustomInput'
 
+import {auth} from '../config/config'
+
 class LoginScreen extends Component {
+
+    state={
+        email:'',
+        password:''
+    }
+
+    handleTextInput=(e,placeholder)=>{
+        switch(placeholder){
+            case "Phone number , username or email":this.setState({email:e})
+            case "password":this.setState({password:e})
+            default : return null
+        }
+    }
+
+    handleRegister=()=>{
+        const {email,password}=this.state
+        auth.signInWithEmailAndPassword(email,password).then(
+            res=>console.warn(res)
+        ).catch(
+            (err)=>console.warn(err)
+        )
+    }
+
     render() {
         return (
             <View>
@@ -22,13 +47,13 @@ class LoginScreen extends Component {
 
                 <View style={styles.formBlock}>
                     <View style={styles.formInput}>
-                        <CustomInput secureTextEntry={false} placeholder="Phone number , username or email"/>
+                        <CustomInput secureTextEntry={false} placeholder="Phone number , username or email" handleTextInput={this.handleTextInput}/>
                     </View>
                     <View style={{marginTop:'3%'}}>
-                        <CustomInput secureTextEntry={true} placeholder="password"/>
+                        <CustomInput secureTextEntry={true} placeholder="password" handleTextInput={this.handleTextInput}/>
                     </View>
                     <View style={styles.loginBtn}>
-                        <CustomButton btnTitle="Log in" icon={false}/>
+                        <CustomButton btnTitle="Log in" icon={false} handleRegister={this.handleRegister}/>
                     </View>
                 </View>  
 
@@ -40,7 +65,7 @@ class LoginScreen extends Component {
 
                 <View style={styles.signUpLinkBlock}>
                     <Text style={styles.que}>Don't have an account ?</Text>
-                    <TouchableOpacity style={styles.Link}>
+                    <TouchableOpacity style={styles.Link} onPress={()=>this.props.navigation.navigate('SignUp')}>
                         <Text style={styles.Link}>Sign up</Text>
                     </TouchableOpacity>
                 </View>   

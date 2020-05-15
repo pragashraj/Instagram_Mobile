@@ -1,9 +1,9 @@
 import React from 'react'
 import { View, Text, StyleSheet , TouchableOpacity ,Image} from 'react-native'
 
-const CustomButton = ({btnTitle,icon}) => {
+const CustomButton = ({btnTitle,icon,handleRegister}) => {
     return (
-        <TouchableOpacity>
+        <TouchableOpacity onPress={()=>handleRegister()}>
             <View style={styles.container}>
                 {
                     icon ? <Image source={require('../assets/icons/fb.png')}/> :null
