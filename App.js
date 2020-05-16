@@ -20,6 +20,10 @@ import addPost from './src/assets/icons/addPost.png'
 import activity from './src/assets/icons/activity.png'
 import profile from './src/assets/icons/profile.png'
 
+
+import {Provider} from 'react-redux'
+import store from './src/redux/store'
+
 const stack=createStackNavigator()
 const bottomTab=createBottomTabNavigator()
 
@@ -118,4 +122,10 @@ const App = () => {
   )
 }
 
-export default App
+export default ()=>{
+  return(
+    <Provider store={store}>
+      <App/>
+    </Provider>
+  )
+}

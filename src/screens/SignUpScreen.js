@@ -6,13 +6,17 @@ import CustomInput from '../components/CustomInput'
 
 import {auth} from '../config/config'
 
+import {connect} from 'react-redux'
+import {setCurrentAuth} from '../redux/actions/setAuth'
+
 class SignUpScreen extends Component {
 
     state={
         email:'',
         fullName:'',
         userName:'',
-        password:''
+        password:'',
+        errorMessage:''
     }
 
     handleTextInput=(e,placeholder)=>{
@@ -28,9 +32,15 @@ class SignUpScreen extends Component {
     handleRegister=()=>{
         const {email,password}=this.state
         auth.createUserWithEmailAndPassword(email,password).then(
-            (user)=>console.warn(user)
+            (user)=>{
+                this.setState({errorMessage:''})
+                this.props.setCurrentAuth(user)
+                this.props.navigation.navigate('mainFlow')
+            }
         ).catch(
-            (err)=>console.warn(err)
+            (err)=>{
+                this.setState({errorMessage:err.toString()})
+            }
         )
     }
 
@@ -73,6 +83,9 @@ class SignUpScreen extends Component {
                 </View>
 
                 <View style={styles.TermBlock}>
+                {
+                    this.state.errorMessage ? <Text style={styles.errorMessage}>{this.state.errorMessage}</Text> :null
+                }
                     <Text style={styles.termText}>By signinig up, you agree to our</Text>
                     <Text style={styles.termText}>terms and privacy policy</Text>  
                 </View>
@@ -140,12 +153,19 @@ const styles=StyleSheet.create({
         marginTop:'5%',
     },
 
+
+
     TermBlock:{
         width:'90%',
         height:'20%',
         marginLeft:'5%',
-        justifyContent:'center',
+        // justifyContent:'center',
         alignItems:'center'
+    },
+
+    errorMessage:{
+        color:'red',
+        fontSize:22
     },
 
     termText:{
@@ -154,4 +174,10 @@ const styles=StyleSheet.create({
     }
 })
 
-export default SignUpScreen
+const mapDispatchToProps=dispatch=>{
+    return{
+        setCurrentAuth:user=>dispatch(setCurrentAuth(user))
+    }
+}
+
+export default connect(null,mapDispatchToProps)(SignUpScreen)

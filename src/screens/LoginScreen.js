@@ -6,17 +6,25 @@ import CustomInput from '../components/CustomInput'
 
 import {auth} from '../config/config'
 
+import {connect} from 'react-redux'
+import {setCurrentAuth} from '../redux/actions/setAuth'
+
 class LoginScreen extends Component {
 
     state={
         email:'',
-        password:''
+        password:'',
+        errorMessage:''
     }
 
     handleTextInput=(e,placeholder)=>{
         switch(placeholder){
-            case "Phone number , username or email":this.setState({email:e})
-            case "password":this.setState({password:e})
+            case "Phone number , username or email":
+                this.setState({email:e}) 
+                break
+            case "password":
+                this.setState({password:e})
+                break
             default : return null
         }
     }
@@ -24,9 +32,15 @@ class LoginScreen extends Component {
     handleRegister=()=>{
         const {email,password}=this.state
         auth.signInWithEmailAndPassword(email,password).then(
-            res=>console.warn(res)
+            user=>{
+                this.setState({errorMessage:''})
+                this.props.setCurrentAuth(user)
+                this.props.navigation.navigate('mainFlow')
+            }
         ).catch(
-            (err)=>console.warn(err)
+            (err)=>{
+                this.setState({errorMessage:err.toString()})
+            }
         )
     }
 
@@ -58,6 +72,9 @@ class LoginScreen extends Component {
                 </View>  
 
                 <View style={styles.forgetBlock}>
+                   {
+                       this.state.errorMessage ? <Text style={styles.errorMessage}>{this.state.errorMessage}</Text> :null
+                   }
                    <TouchableOpacity>
                         <Text style={styles.forgotText}>Forgot password?</Text>
                    </TouchableOpacity>
@@ -69,7 +86,6 @@ class LoginScreen extends Component {
                         <Text style={styles.Link}>Sign up</Text>
                     </TouchableOpacity>
                 </View>   
-
             </View>
         )
     }
@@ -114,6 +130,7 @@ const styles=StyleSheet.create({
         marginLeft:'5%',
     },
 
+
     formInput:{
         marginTop:'10%'
     },
@@ -128,13 +145,20 @@ const styles=StyleSheet.create({
         width:'90%',
         height:'25%',
         marginLeft:'5%',
-        justifyContent:'center',
+        // justifyContent:'center',
         alignItems:'center'
+    },
+
+    
+    errorMessage:{
+        color:'red',
+        fontSize:22
     },
 
     forgotText:{
         color:'blue',
-        fontSize:16
+        fontSize:16,
+        marginTop:'3%'
     },
 
     signUpLinkBlock:{
@@ -157,4 +181,10 @@ const styles=StyleSheet.create({
     }
 })
 
-export default LoginScreen
+
+const mapDispatchToProps=dispatch=>{
+    return{
+        setCurrentAuth:user=>dispatch(setCurrentAuth(user))
+    }
+}
+export default connect(null,mapDispatchToProps)(LoginScreen)
