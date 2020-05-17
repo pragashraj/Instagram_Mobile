@@ -3,6 +3,7 @@ import { Text, View ,StyleSheet } from 'react-native'
 
 import CustomButton from '../components/CustomButton'
 import CustomInput from '../components/CustomInput'
+import Spinner from '../components/Spinner'
 
 import {auth} from '../config/config'
 
@@ -16,7 +17,8 @@ class SignUpScreen extends Component {
         fullName:'',
         userName:'',
         password:'',
-        errorMessage:''
+        errorMessage:'',
+        loading:false
     }
 
     handleTextInput=(e,placeholder)=>{
@@ -31,15 +33,16 @@ class SignUpScreen extends Component {
 
     handleRegister=()=>{
         const {email,password}=this.state
+        this.setState({loading:true})
         auth.createUserWithEmailAndPassword(email,password).then(
             (user)=>{
-                this.setState({errorMessage:''})
+                this.setState({errorMessage:'',loading:false})
                 this.props.setCurrentAuth(user)
                 this.props.navigation.navigate('mainFlow')
             }
         ).catch(
             (err)=>{
-                this.setState({errorMessage:err.toString()})
+                this.setState({errorMessage:err.toString(),loading:false})
             }
         )
     }
@@ -78,7 +81,9 @@ class SignUpScreen extends Component {
                         </View>
 
                         <View style={styles.loginBtn}>
-                            <CustomButton btnTitle="Sign up" icon={false} handleRegister={this.handleRegister}/>
+                        {
+                            this.state.loading ? <Spinner size="large"/> :<CustomButton btnTitle="Sign up" icon={false} handleRegister={this.handleRegister}/>
+                        }                      
                         </View>
                 </View>
 

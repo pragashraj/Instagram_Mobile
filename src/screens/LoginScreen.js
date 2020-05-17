@@ -3,6 +3,7 @@ import { Text, View ,StyleSheet,TouchableOpacity } from 'react-native'
 
 import CustomButton from '../components/CustomButton'
 import CustomInput from '../components/CustomInput'
+import Spinner from '../components/Spinner'
 
 import {auth} from '../config/config'
 
@@ -14,7 +15,8 @@ class LoginScreen extends Component {
     state={
         email:'',
         password:'',
-        errorMessage:''
+        errorMessage:'',
+        loading:false
     }
 
     handleTextInput=(e,placeholder)=>{
@@ -31,22 +33,23 @@ class LoginScreen extends Component {
 
     handleRegister=()=>{
         const {email,password}=this.state
+        this.setState({loading:true})
         auth.signInWithEmailAndPassword(email,password).then(
             user=>{
-                this.setState({errorMessage:''})
+                this.setState({errorMessage:'',loading:false})
                 this.props.setCurrentAuth(user)
                 this.props.navigation.navigate('mainFlow')
             }
         ).catch(
             (err)=>{
-                this.setState({errorMessage:err.toString()})
+                this.setState({errorMessage:err.toString(),loading:false})
             }
         )
     }
 
     render() {
         return (
-            <View>
+            <View style={{flex:1}}>
                 <View style={styles.TextBlock}>
                     <Text style={styles.instaText}>Instagram</Text>
                 </View>
@@ -67,7 +70,9 @@ class LoginScreen extends Component {
                         <CustomInput secureTextEntry={true} placeholder="password" handleTextInput={this.handleTextInput}/>
                     </View>
                     <View style={styles.loginBtn}>
-                        <CustomButton btnTitle="Log in" icon={false} handleRegister={this.handleRegister}/>
+                    {
+                        this.state.loading ? <Spinner size="large"/> : <CustomButton btnTitle="Log in" icon={false} handleRegister={this.handleRegister}/>
+                    }                      
                     </View>
                 </View>  
 
@@ -157,7 +162,7 @@ const styles=StyleSheet.create({
 
     forgotText:{
         color:'blue',
-        fontSize:16,
+        fontSize:15,
         marginTop:'3%'
     },
 

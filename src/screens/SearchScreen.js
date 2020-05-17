@@ -41,7 +41,7 @@ const styles=StyleSheet.create({
         width:'100%',
         height:'12%',
         justifyContent:'center',
-        alignItems:'center'
+        alignItems:'center',
     },
 
     searchBox:{

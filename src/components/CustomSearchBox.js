@@ -14,7 +14,7 @@ class CustomSearchBox extends Component {
 
     render() {
         return (
-            <View>
+            <View style={{flex:1}}>
                 <TextInput 
                     autoCapitalize="none"
                     autoCorrect={false}
@@ -30,11 +30,11 @@ class CustomSearchBox extends Component {
 const styles=StyleSheet.create({
     textInput:{
         backgroundColor:'lightgray',
-        width:'100%',
-        height:'100%',
+        // width:'100%',
+        // height:'100%',
         borderRadius:10,
         fontSize:18,
-        padding:'2%'
+        // padding:'2%'
     }
 })
 
