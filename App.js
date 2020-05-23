@@ -1,6 +1,6 @@
 import 'react-native-gesture-handler';
 import React from 'react'
-import {Image} from 'react-native'
+import {Image,TouchableOpacity} from 'react-native'
 
 import LoginScreen from './src/screens/LoginScreen'
 import SignUpScreen from './src/screens/SignUpScreen'
@@ -9,6 +9,7 @@ import HomeScreen from './src/screens/HomeScreen'
 import SearchScreen from './src/screens/SearchScreen'
 import AddPostScreen from './src/screens/AddPostScreen'
 import ActivityScreen from './src/screens/ActivityScreen'
+import EditProfile from './src/screens/EditProfile'
 
 import {createStackNavigator} from '@react-navigation/stack'
 import {NavigationContainer} from '@react-navigation/native'
@@ -19,7 +20,7 @@ import search from './src/assets/icons/search.png'
 import addPost from './src/assets/icons/addPost.png'
 import activity from './src/assets/icons/activity.png'
 import profile from './src/assets/icons/profile.png'
-
+ 
 
 import {Provider} from 'react-redux'
 import store from './src/redux/store'
@@ -116,6 +117,18 @@ const App = () => {
             name="mainFlow"
             component={mainFlow}
             options={ { headerShown:false } }
+          />
+
+          <stack.Screen
+            name="Edit_Profile"
+            component={EditProfile}
+            options={{
+              headerRight:()=>(
+                <TouchableOpacity>
+                    <Image source={require('./src/assets/icons/check.png')}/>
+                </TouchableOpacity>
+              )
+            }}
           />
       </stack.Navigator>
     </NavigationContainer>

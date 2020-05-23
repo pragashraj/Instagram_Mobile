@@ -5,10 +5,10 @@ import settingimage from '../../src/assets/icons/settingimage.png'
 import CustomButton from '../components/CustomButton'
 
 
-const ProfileScreen = () => {
+const ProfileScreen = ({navigation}) => {
 
-    const handleRegister=()=>{
-        console.warn("clicked")
+    const EditProfile=()=>{
+        navigation.navigate('Edit_Profile')
     }
 
     return (
@@ -45,7 +45,7 @@ const ProfileScreen = () => {
             </View>
 
             <View style={styles.editProfileBlock}>
-                <CustomButton btnTitle="Edit Profile" icon={false} handleRegister={handleRegister} />
+                <CustomButton btnTitle="Edit Profile" icon={false} handleRegister={EditProfile} />
             </View>
 
             <View style={styles.highlightsBlock}>
