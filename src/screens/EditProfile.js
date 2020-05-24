@@ -1,6 +1,10 @@
 import React, { Component } from 'react'
 import { Text, View ,StyleSheet,Image,ScrollView ,TouchableOpacity,TextInput,FlatList,Modal,TouchableHighlight} from 'react-native'
 
+import {connect} from 'react-redux'
+import {setProDetails} from '../redux/actions/setProfileDetails'
+
+
 class EditProfile extends Component {
     state={
         Name:'',
@@ -14,6 +18,8 @@ class EditProfile extends Component {
         this.setState({
             [item]:value
         })
+        // const {Name,Username,Website,Bio}=this.state
+        // console.warn({Name,Username,Website,Bio})
     }
 
     renderInputField=()=>{
@@ -59,6 +65,14 @@ class EditProfile extends Component {
                                 }}
                             >
                             <Text style={styles.textStyle}>camera</Text>
+                            </TouchableHighlight>
+                            <TouchableHighlight
+                                style={{ ...styles.openButton, backgroundColor: "#2196F3",marginTop:'2%' }}
+                                onPress={() => {
+                                    this.setState({modalVisible:!this.state.modalVisible})
+                                }}
+                            >
+                            <Text style={styles.textStyle}>Gallery</Text>
                             </TouchableHighlight>
                         </View>
                     </View>
@@ -153,4 +167,13 @@ const styles=StyleSheet.create({
       }
 })
 
+
+
+const mapDispatchToProps=dispatch=>{
+    return{
+        setProDetails:proDetails=>dispatch(setProDetails(proDetails))
+    }
+}
+
+// export default connect(null,mapDispatchToProps)(EditProfile)
 export default EditProfile
