@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Text, View } from 'react-native'
+import { View } from 'react-native'
 import ImagePicker from 'react-native-image-picker'
 
 class LaunchCamera extends Component {
