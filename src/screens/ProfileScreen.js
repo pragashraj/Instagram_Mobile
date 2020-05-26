@@ -3,9 +3,9 @@ import { View, Text ,StyleSheet , Image , TouchableOpacity} from 'react-native'
 
 import settingimage from '../../src/assets/icons/settingimage.png'
 import CustomButton from '../components/CustomButton'
+import {connect} from 'react-redux'
 
-
-const ProfileScreen = ({navigation}) => {
+const ProfileScreen = ({navigation,proDetails}) => {
 
     const EditProfile=()=>{
         navigation.navigate('Edit_Profile')
@@ -25,7 +25,10 @@ const ProfileScreen = ({navigation}) => {
 
             <View style={styles.headerMain}>
                 <View style={styles.profileImageBlock}>
-                    <Image source ={require('../assets/icons/user.png')} style={styles.profileImage}/>
+                    {
+                        proDetails.ImageFile.fileUri===null  ? <Image source={require('../assets/icons/user.png')} style={styles.profileImage}/>
+                        :<Image source={{uri:proDetails.ImageFile.fileUri}} style={styles.profileImage}/>
+                    }
                 </View>
                 <View style={styles.counterBlock}>
                     <Text style={styles.counter}>10</Text>
@@ -232,5 +235,10 @@ const styles=StyleSheet.create({
     },
 })
 
+const mapStateToProps=({profileInfo:{proDetails}})=>{
+    return{
+        proDetails
+    }
+}
 
-export default ProfileScreen
+export default connect(mapStateToProps)(ProfileScreen)

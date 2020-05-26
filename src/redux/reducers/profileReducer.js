@@ -1,5 +1,16 @@
 const INITIAL_STATE={
-    proDetails:{}
+    proDetails:{
+        Name:'',
+        Username:'',
+        Website:'',
+        Bio:'',
+        modalVisible:false,
+        ImageFile:{
+            filePath: null,
+            fileData: null,
+            fileUri: null
+        }
+    }
 }
 
 const profileReducer=(state=INITIAL_STATE,action)=>{

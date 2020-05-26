@@ -5,7 +5,7 @@ import CustomButton from '../components/CustomButton'
 import CustomInput from '../components/CustomInput'
 import Spinner from '../components/Spinner'
 
-import {auth} from '../config/config'
+import {auth,database} from '../config/config'
 
 import {connect} from 'react-redux'
 import {setCurrentAuth} from '../redux/actions/setAuth'
@@ -39,6 +39,7 @@ class SignUpScreen extends Component {
                 this.setState({errorMessage:'',loading:false})
                 this.props.setCurrentAuth(user)
                 this.props.navigation.navigate('mainFlow')
+                database.ref(`User/${user.user.uid}/uid`).set(user.user.uid)            
             }
         ).catch(
             (err)=>{

@@ -25,6 +25,7 @@ import profile from './src/assets/icons/profile.png'
 import {Provider} from 'react-redux'
 import store from './src/redux/store'
 
+
 const stack=createStackNavigator()
 const bottomTab=createBottomTabNavigator()
 
@@ -122,18 +123,12 @@ const App = () => {
           <stack.Screen
             name="Edit_Profile"
             component={EditProfile}
-            options={{
-              headerRight:()=>(
-                <TouchableOpacity>
-                    <Image source={require('./src/assets/icons/check.png')}/>
-                </TouchableOpacity>
-              )
-            }}
           />
       </stack.Navigator>
     </NavigationContainer>
   )
 }
+
 
 export default ()=>{
   return(

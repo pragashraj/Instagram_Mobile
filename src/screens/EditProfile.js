@@ -3,7 +3,8 @@ import { Text, View ,StyleSheet,Image,ScrollView ,TouchableOpacity,TextInput,Fla
 import ImagePicker from 'react-native-image-picker'
 import {connect} from 'react-redux'
 
-import {database,auth} from '../config/config'
+import {database,storage,fbase} from '../config/config'
+import {setProDetails} from '../redux/actions/setProfileDetails'
 
 
 class EditProfile extends Component {
@@ -27,10 +28,24 @@ class EditProfile extends Component {
         }
     }
 
-    saveData=async()=>{
+    saveImage=async()=>{
+        const proDetails=this.state
+        this.props.setProDetails(proDetails)
+        const uid=fbase.auth().currentUser.uid
+        const res=await fetch(this.state.ImageFile.fileUri)
+        const blob=await res.blob()
+        const filePath=uid+Math.floor(Math.random()*100)
+        const ref=storage.ref('user/'+uid+'/profileImg').child(filePath.toString())
+        var snapshot=ref.put(blob).on('state_changed',snapshot=>{
+            console.log(snapshot.totalBytes)
+        })
+    }
+
+    saveData= async()=>{
         const {Name,Username,Website,Bio}=this.state
-        const detail={Name,Username,Website,Bio}
-        await database.ref(`ProfileDetails/${this.props.user.user.uid}`).set(detail)
+        const details={Name,Username,Website,Bio}
+        const uid=fbase.auth().currentUser.uid
+        await database.ref(`User/${uid}/uid`).set(details)
     }
 
     launchCamera=()=>{
@@ -41,7 +56,6 @@ class EditProfile extends Component {
                 console.warn('ImagePicker Error: ', response.error);
             } else if (response.customButton) {
                 console.log('User tapped custom button: ', response.customButton);
-                alert(response.customButton);
             }else{
                 const source={uri:response.uri}
                 this.setState({
@@ -54,6 +68,25 @@ class EditProfile extends Component {
             } 
         })
     }
+
+    launchImageGallery=()=>{
+        ImagePicker.launchImageLibrary(this.options,(response)=>{
+            if (response.didCancel) {
+                console.warn('User cancelled image picker');
+            } else if (response.error) {
+                console.warn('ImagePicker Error: ', response.error);
+            }else{
+                this.setState({
+                    ImageFile: {
+                        filePath: response,
+                        fileData: response.data,
+                        fileUri: response.uri
+                    }
+                })
+            } 
+        })
+    }
+
 
 
     handleTextChange=(value,item)=>{
@@ -110,6 +143,7 @@ class EditProfile extends Component {
                                 style={{ ...styles.openButton, backgroundColor: "#2196F3",marginLeft:'2%'}}
                                 onPress={() => {
                                     this.setState({modalVisible:!this.state.modalVisible})
+                                    this.launchImageGallery()
                                 }}
                             >
                             <Text style={styles.textStyle}>Gallery</Text>
@@ -120,8 +154,8 @@ class EditProfile extends Component {
 
                 <View style={styles.ImageSelector}>
                     {
-                        !this.state.ImageFile.fileUri ? <Image source={require('../assets/icons/user.png')} style={styles.image}/>
-                         :<Image source={{uri:this.state.ImageFile.fileUri}} style={styles.image}/>
+                        !this.props.proDetails.ImageFile.fileUri ? <Image source={require('../assets/icons/user.png')} style={styles.image}/>
+                         :<Image source={{uri:this.props.proDetails.ImageFile.fileUri}} style={styles.image}/>
                     }
                     <TouchableOpacity onPress={()=>this.setState({modalVisible:!this.state.modalVisible})}>
                         <Text style={styles.textLink}>Change Profile Photo</Text>
@@ -134,6 +168,9 @@ class EditProfile extends Component {
                     <View style={styles.saveTextBlock}>
                         <TouchableOpacity onPress={()=>this.saveData()}>
                             <Text style={styles.saveText}>Save Info</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={()=>this.saveImage()}>
+                            <Text style={{...styles.saveText,paddingVertical:'2%'}}>Save Image</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -227,10 +264,17 @@ const styles=StyleSheet.create({
       }
 })
 
-const mapStateToProps=({auth:{user}})=>{
+const mapStateToProps=({auth:{user},profileInfo:{proDetails}})=>{
     return{
-        user
+        user,
+        proDetails
     }
 }
 
-export default connect(mapStateToProps)(EditProfile)
+const mapDispatchToProps=dispatch=>{
+    return{
+        setProDetails:proDetails=>dispatch(setProDetails(proDetails))
+    }
+}
+
+export default connect(mapStateToProps,mapDispatchToProps)(EditProfile)
