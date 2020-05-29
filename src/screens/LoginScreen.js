@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Text, View ,StyleSheet,TouchableOpacity } from 'react-native'
+import { Text, View ,StyleSheet,TouchableOpacity ,ScrollView} from 'react-native'
 
 import CustomButton from '../components/CustomButton'
 import CustomInput from '../components/CustomInput'
@@ -49,7 +49,7 @@ class LoginScreen extends Component {
 
     render() {
         return (
-            <View style={{flex:1}}>
+            <ScrollView  contentContainerStyle={styles.container}>
                 <View style={styles.TextBlock}>
                     <Text style={styles.instaText}>Instagram</Text>
                 </View>
@@ -91,16 +91,21 @@ class LoginScreen extends Component {
                         <Text style={styles.Link}>Sign up</Text>
                     </TouchableOpacity>
                 </View>   
-            </View>
+            </ScrollView>
         )
     }
 }
 
 const styles=StyleSheet.create({
+
+    container:{
+        flex: 1,
+        alignItems:'center'
+    },
+
     TextBlock:{
         width:'90%',
-        height:'20%',
-        marginLeft:'5%',
+        height:100,
         justifyContent:'center',
         alignItems:'center'
     },
@@ -113,16 +118,16 @@ const styles=StyleSheet.create({
 
     btnBlock:{
         width:'90%',
-        height:'7%',
-        marginLeft:'5%',
+        height:40,
+        marginTop:'5%',
     },
 
     orBlock:{
         width:'90%',
-        height:'5%',
-        marginLeft:'5%',
+        height:18,
         justifyContent:'center',
         alignItems:'center',
+        marginTop:'2%',
     },
 
     orText:{
@@ -131,8 +136,8 @@ const styles=StyleSheet.create({
 
     formBlock:{
         width:'90%',
-        height:'35%',
-        marginLeft:'5%',
+        height:100,
+        marginTop:'8%',
     },
 
 
@@ -142,16 +147,16 @@ const styles=StyleSheet.create({
 
     loginBtn:{
         width:'100%',
-        height:'19%',
+        height:40,
         marginTop:'5%',
     },
 
     forgetBlock:{
         width:'90%',
-        height:'25%',
+        height:30,
         marginLeft:'5%',
-        // justifyContent:'center',
-        alignItems:'center'
+        alignItems:'center',
+        marginTop:'35%',
     },
 
     
@@ -168,11 +173,13 @@ const styles=StyleSheet.create({
 
     signUpLinkBlock:{
         width:'100%',
-        height:'8%',
+        height:50,
         backgroundColor:'lightgray',
         flexDirection:'row',
         justifyContent:'center',
-        alignItems:'center'
+        alignItems:'center',
+        position: 'absolute', 
+        bottom: 0,
     },
 
     que:{
