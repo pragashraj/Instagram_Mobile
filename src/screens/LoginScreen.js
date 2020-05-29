@@ -55,7 +55,7 @@ class LoginScreen extends Component {
                 </View>
 
                 <View style={styles.btnBlock}>
-                    <CustomButton btnTitle="Continue With Facebook" icon={true}/>
+                    <CustomButton btnTitle="Continue With Facebook" icon={true} handleRegister={()=>{}}/>
                 </View>
 
                 <View style={styles.orBlock}>

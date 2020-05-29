@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Text, View ,StyleSheet } from 'react-native'
+import { Text, View ,StyleSheet,ScrollView } from 'react-native'
 
 import CustomButton from '../components/CustomButton'
 import CustomInput from '../components/CustomInput'
@@ -50,14 +50,14 @@ class SignUpScreen extends Component {
 
     render() {
         return (
-            <View>
+            <ScrollView contentContainerStyle={styles.container}>
                 <View style={styles.TextBlock}>
                     <Text style={styles.instaText}>Instagram</Text>
                     <Text style={styles.textExtra}> Sign up to see Friend's photos & videos</Text>
                 </View>
 
                 <View style={styles.btnBlock}>
-                    <CustomButton btnTitle="Log in With Facebook" icon={true}/>
+                    <CustomButton btnTitle="Log in With Facebook" icon={true} handleRegister={()=>{}}/>
                 </View>
 
                 <View style={styles.orBlock}>
@@ -95,24 +95,32 @@ class SignUpScreen extends Component {
                     <Text style={styles.termText}>By signinig up, you agree to our</Text>
                     <Text style={styles.termText}>terms and privacy policy</Text>  
                 </View>
-            </View>
+            </ScrollView>
         )
     }
 }
 
 
 const styles=StyleSheet.create({
+
+    container:{
+        // flex: 1,
+        alignItems:'center'
+    },
+
+
     TextBlock:{
         width:'90%',
-        height:'20%',
-        marginLeft:'5%',
+        height:50,
+        // marginLeft:'5%',
         justifyContent:'center',
         alignItems:'center',
+        marginTop:'8%'
     },
 
     instaText:{
         fontFamily:'Precious',
-        fontSize:30,
+        fontSize:45,
         marginTop:'5%'
     },
 
@@ -126,14 +134,15 @@ const styles=StyleSheet.create({
     
     btnBlock:{
         width:'90%',
-        height:'5%',
-        marginLeft:'5%',
+        height:40,
+        marginTop:'10%'
+        // marginLeft:'5%',
     },
 
     orBlock:{
         width:'90%',
-        height:'5%',
-        marginLeft:'5%',
+        height:18,
+        // marginLeft:'5%',
         justifyContent:'center',
         alignItems:'center',
     },
@@ -145,8 +154,9 @@ const styles=StyleSheet.create({
 
     formBlock:{
         width:'90%',
-        height:'50%',
-        marginLeft:'5%',
+        height:200,
+        // marginLeft:'5%',
+        marginTop:'5%'
     },
 
     formInput:{
@@ -155,18 +165,20 @@ const styles=StyleSheet.create({
 
     loginBtn:{
         width:'100%',
-        height:'12%',
-        marginTop:'5%',
+        height:40,
+        // marginTop:'5%',
+        marginTop:'5%'
     },
 
 
 
     TermBlock:{
         width:'90%',
-        height:'20%',
-        marginLeft:'5%',
+        height:50,
+        // marginLeft:'5%',
         // justifyContent:'center',
-        alignItems:'center'
+        alignItems:'center',
+        marginTop:'35%'
     },
 
     errorMessage:{
