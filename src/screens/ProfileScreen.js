@@ -1,85 +1,93 @@
-import React from 'react'
+import React,{Component} from 'react'
 import { View, Text ,StyleSheet , Image , TouchableOpacity} from 'react-native'
 
 import settingimage from '../../src/assets/icons/settingimage.png'
 import CustomButton from '../components/CustomButton'
 import {connect} from 'react-redux'
+import {storage,fbase} from '../config/config'
 
-const ProfileScreen = ({navigation,proDetails}) => {
+class ProfileScreen extends Component{
 
-    const EditProfile=()=>{
-        navigation.navigate('Edit_Profile')
+    componentDidMount(){
+        
     }
 
-    return (
-        <View style={styles.container}>
-            <View style={styles.header}>
-                <View style={styles.usernmeBlock}>
-                    <Text style={styles.username}>user_name</Text>
-                </View>
-                
-               <TouchableOpacity style={styles.settings}>
-                    <Image source={settingimage} style={styles.settingImage}/>
-               </TouchableOpacity>
-            </View>
+    EditProfile=()=>{
+        this.props.navigation.navigate('Edit_Profile')
+    }
 
-            <View style={styles.headerMain}>
-                <View style={styles.profileImageBlock}>
-                    {
-                        proDetails.ImageFile.fileUri===null  ? <Image source={require('../assets/icons/user.png')} style={styles.profileImage}/>
-                        :<Image source={{uri:proDetails.ImageFile.fileUri}} style={styles.profileImage}/>
-                    }
-                </View>
-                <View style={styles.counterBlock}>
-                    <Text style={styles.counter}>10</Text>
-                    <Text style={styles.counterText}>Posts</Text>
-                </View>
-
-                <View style={styles.counterBlock}>
-                    <Text style={styles.counter}>22</Text>
-                    <Text style={styles.counterText}>Followers</Text>
-                </View>
-
-                <View style={styles.counterBlock}>
-                    <Text style={styles.counter}>51</Text>
-                    <Text style={styles.counterText}>Following</Text>
-                </View>
-
-            </View>
-
-            <View style={styles.editProfileBlock}>
-                <CustomButton btnTitle="Edit Profile" icon={false} handleRegister={EditProfile} />
-            </View>
-
-            <View style={styles.highlightsBlock}>
-                <Text style={styles.highlightText01}>Story Highlights</Text>
-                <Text style={styles.highlightText02}>Keep your favourite stories here</Text>
-
-                <TouchableOpacity style={styles.addBlock}>
-                    <Image source={require('../assets/icons/add.png')} style={styles.add}/>
-                </TouchableOpacity>
-            </View>
-
-            <View style={styles.LinkBlock}>
-                <TouchableOpacity style={true ? styles.gridBlock :styles.gridBlock02}>
-                    <View>
-                        <Image source={require('../assets/icons/grid.png')} style={ true ? null:styles.grid} />
+    render(){
+        return (
+            <View style={styles.container}>
+                <View style={styles.header}>
+                    <View style={styles.usernmeBlock}>
+                        <Text style={styles.username}>user_name</Text>
                     </View>
+                    
+                <TouchableOpacity style={styles.settings}>
+                        <Image source={settingimage} style={styles.settingImage}/>
                 </TouchableOpacity>
+                </View>
 
-                <TouchableOpacity style={false ? styles.gridBlock :styles.gridBlock02}>
-                    <View>
-                        <Image source={require('../assets/icons/cal.png')} style={ false ? null:styles.grid} />
+                <View style={styles.headerMain}>
+                    <View style={styles.profileImageBlock}>
+                        {
+                            this.props.proDetails.ImageFile.fileUri===null  ? <Image source={require('../assets/icons/user.png')} style={styles.profileImage}/>
+                            :<Image source={{uri:this.props.proDetails.ImageFile.fileUri}} style={styles.profileImage}/>
+                        }
                     </View>
-                </TouchableOpacity>
-            </View>
+                    <View style={styles.counterBlock}>
+                        <Text style={styles.counter}>10</Text>
+                        <Text style={styles.counterText}>Posts</Text>
+                    </View>
 
-            <View style={styles.contentsBlock}>
-                <Text style={styles.contentTitle}>Profile</Text>
-                <Text style={styles.message}>When you share photos & videos they'll be here</Text>
+                    <View style={styles.counterBlock}>
+                        <Text style={styles.counter}>22</Text>
+                        <Text style={styles.counterText}>Followers</Text>
+                    </View>
+
+                    <View style={styles.counterBlock}>
+                        <Text style={styles.counter}>51</Text>
+                        <Text style={styles.counterText}>Following</Text>
+                    </View>
+
+                </View>
+
+                <View style={styles.editProfileBlock}>
+                    <CustomButton btnTitle="Edit Profile" icon={false} handleRegister={this.EditProfile} />
+                </View>
+
+                <View style={styles.highlightsBlock}>
+                    <Text style={styles.highlightText01}>Story Highlights</Text>
+                    <Text style={styles.highlightText02}>Keep your favourite stories here</Text>
+
+                    <TouchableOpacity style={styles.addBlock}>
+                        <Image source={require('../assets/icons/add.png')} style={styles.add}/>
+                    </TouchableOpacity>
+                </View>
+
+                <View style={styles.LinkBlock}>
+                    <TouchableOpacity style={true ? styles.gridBlock :styles.gridBlock02}>
+                        <View>
+                            <Image source={require('../assets/icons/grid.png')} style={ true ? null:styles.grid} />
+                        </View>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity style={false ? styles.gridBlock :styles.gridBlock02}>
+                        <View>
+                            <Image source={require('../assets/icons/cal.png')} style={ false ? null:styles.grid} />
+                        </View>
+                    </TouchableOpacity>
+                </View>
+
+                <View style={styles.contentsBlock}>
+                    <Text style={styles.contentTitle}>Profile</Text>
+                    <Text style={styles.message}>When you share photos & videos they'll be here</Text>
+                </View>
             </View>
-        </View>
-    )
+        )
+
+    }
 }
 
 

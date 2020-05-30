@@ -10,11 +10,16 @@ class AddPostScreen extends Component{
         Imagefile:{
             filePath:null,
             fileData:null,
-            fileUri:null,
-            imageId:null
+            fileUri:null
         },
         showBtn:true,
-        textEntry:'',
+        captionTxt:'',
+        post:{
+            caption:'',
+            author:'',
+            url:'',
+            posted:null
+        },
         loading:false
     }
 
@@ -37,7 +42,6 @@ class AddPostScreen extends Component{
                         filePath: response,
                         fileData: response.data,
                         fileUri: response.uri,
-                        imageId:new Date()
                     },
                     showBtn:false
                 })
@@ -60,7 +64,6 @@ class AddPostScreen extends Component{
                         filePath: response,
                         fileData: response.data,
                         fileUri: response.uri,
-                        imageId:new Date()
                     },
                     showBtn:false
                 })
@@ -71,21 +74,41 @@ class AddPostScreen extends Component{
     savePost=async()=>{
         this.setState({loading:true})
         const uid=fbase.auth().currentUser.uid
-        const ImageId=this.state.Imagefile.imageId.toString()+Math.floor(Math.random()*100)
-        const postTxt=this.state.textEntry
+        let author
+        database.ref('ProfileDetails').child(uid).child("Name").on('value',function(snapshot){
+            const exist=(snapshot.val()!==null)
+            if(exist) author=snapshot.val()
+        })
 
-        await database.ref(`Posts/${uid}/${ImageId}`).set(postTxt)
+        const ImageId=Math.floor(Math.random()*1000)
 
         const res=await fetch(this.state.Imagefile.fileUri)
         const blob=await res.blob()
+        const date=new Date()
         
         const ref=storage.ref('user/'+uid+'/posts').child(ImageId.toString())
         var snapshot=ref.put(blob).then(res=>{
-            this.setState({
-                loading:false,
-                showBtn:true,
+
+            ref.getDownloadURL().then(res=>{
+               this.setState({
+                   post:{
+                        author:author,
+                        url:res,
+                        posted:date.toString(),
+                        caption:this.state.captionTxt
+                   }
+               })
+            }).then(()=>{
+
+                database.ref(`Posts/${uid}/${ImageId}`).set(this.state.post).then(()=>{
+                    this.setState({
+                        loading:false,
+                        showBtn:true,
+                    })           
+                })
             })
-        })
+
+        })//end of snapshot
     }
 
     renderBtnCard=()=>{
@@ -117,7 +140,7 @@ class AddPostScreen extends Component{
                         autoCorrect={false}
                         numberOfLines={3}
                         maxLength={100}
-                        onChangeText={(e)=>this.setState({textEntry:e})}
+                        onChangeText={(e)=>this.setState({captionTxt:e})}
                     />
                 </View>
 

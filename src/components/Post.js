@@ -58,7 +58,7 @@ const styles=StyleSheet.create({
 
     postHeader:{
         width:'100%',
-        height:'10%',
+        height:50,
         flexDirection:'row',
         alignItems:'center',
         borderTopWidth:0.2,
@@ -96,7 +96,7 @@ const styles=StyleSheet.create({
 
     post:{
         width:'100%',
-        height:'60%',
+        height:300,
     },
 
     postContent:{
@@ -106,7 +106,7 @@ const styles=StyleSheet.create({
 
     userAction:{
         width:'100%',
-        height:'10%',
+        height:50,
         backgroundColor:'white',
         flexDirection:'row',
         alignItems:'center',
@@ -119,7 +119,7 @@ const styles=StyleSheet.create({
 
     likesCountBlock:{
         width:'100%',
-        height:'10%',
+        height:30,
         justifyContent:'center',
         backgroundColor:'white'
     },
@@ -132,7 +132,7 @@ const styles=StyleSheet.create({
 
     commentsBlock:{
         width:'100%',
-        height:'10%',
+        height:40,
         justifyContent:'center',
         backgroundColor:'white',
         borderBottomWidth:0.2

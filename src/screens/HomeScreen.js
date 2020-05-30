@@ -1,41 +1,65 @@
-import React from 'react'
-import { View, Text , StyleSheet , Image , TouchableOpacity} from 'react-native'
+import React,{Component} from 'react'
+import { View, Text , StyleSheet , Image , TouchableOpacity,ScrollView} from 'react-native'
 
 import Post from '../components/Post'
 import StoryComponent from '../components/StoryComponent'
 
-const HomeScreen = () => {
-    return (
-        <View>
-            <View style={styles.header}>
-                <View style={styles.camera}>
-                    <TouchableOpacity>
-                        <Image source={require('../assets/icons/camera.png')}/>
-                    </TouchableOpacity>
+import {database,fbase} from '../config/config'
+
+class HomeScreen extends Component{
+    state={
+        posts:[]
+    }
+
+    componentDidMount(){
+        const uid=fbase.auth().currentUser.uid
+        let data
+        database.ref('Posts').child(uid).on('value',function(snapshot){
+            const exist=(snapshot.val()!==null)
+            if(exist) data=snapshot.val()
+        })
+
+        this.setState({
+            posts:data
+        })
+       
+    }
+
+    render(){
+        return (
+            <View>
+                <View style={styles.header}>
+                    <View style={styles.camera}>
+                        <TouchableOpacity>
+                            <Image source={require('../assets/icons/camera.png')}/>
+                        </TouchableOpacity>
+                    </View>
+
+                    <View style={styles.titleBlock}>
+                        <Text style={styles.title}>Instagram</Text>
+                    </View>
+
+                    <View style={styles.message}>
+                        <TouchableOpacity>
+                            <Image source={require('../assets/icons/message.png')}/>
+                        </TouchableOpacity>
+                    </View>
                 </View>
 
-                <View style={styles.titleBlock}>
-                    <Text style={styles.title}>Instagram</Text>
+                <View style={styles.stories}>
+                    <View style={styles.story}>
+                        <StoryComponent/>
+                    </View>
                 </View>
 
-                <View style={styles.message}>
-                    <TouchableOpacity>
-                        <Image source={require('../assets/icons/message.png')}/>
-                    </TouchableOpacity>
-                </View>
+                <ScrollView style={styles.posts}>
+                    {
+                        this.state.posts.length > 0 ? <Post/> : console.warn(this.state.posts)
+                    }
+                </ScrollView>
             </View>
-
-            <View style={styles.stories}>
-                <View style={styles.story}>
-                    <StoryComponent/>
-                </View>
-            </View>
-
-            <View style={styles.posts}>
-                <Post/>
-            </View>
-        </View>
-    )
+        )
+    }
 }
 
 
