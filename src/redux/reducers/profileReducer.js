@@ -1,16 +1,5 @@
 const INITIAL_STATE={
-    proDetails:{
-        Name:'',
-        Username:'',
-        Website:'',
-        Bio:'',
-        modalVisible:false,
-        ImageFile:{
-            filePath: null,
-            fileData: null,
-            fileUri: null
-        }
-    }
+    profilePicUrl:''
 }
 
 const profileReducer=(state=INITIAL_STATE,action)=>{
@@ -18,7 +7,7 @@ const profileReducer=(state=INITIAL_STATE,action)=>{
         case "SET_PROFILE_DETAIL":
             return{
                 ...state,
-                proDetails:action.payload
+                profilePicUrl:action.payload
             }
         default :return state
     }

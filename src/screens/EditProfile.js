@@ -5,6 +5,7 @@ import {connect} from 'react-redux'
 
 import {database,storage,fbase} from '../config/config'
 import {setProDetails} from '../redux/actions/setProfileDetails'
+import Spinner from '../components/Spinner'
 
 
 class EditProfile extends Component {
@@ -18,7 +19,9 @@ class EditProfile extends Component {
             filePath: null,
             fileData: null,
             fileUri: null
-        }
+        },
+        profilePicUrl:'',
+        loading:false
     }
 
     options={
@@ -29,23 +32,34 @@ class EditProfile extends Component {
     }
 
     saveImage=async()=>{
-        const proDetails=this.state
-        this.props.setProDetails(proDetails)
+        this.setState({loading:true})
         const uid=fbase.auth().currentUser.uid
         const res=await fetch(this.state.ImageFile.fileUri)
         const blob=await res.blob()
         const filePath=uid+Math.floor(Math.random()*100)
         const ref=storage.ref('user/'+uid+'/profileImg').child(filePath.toString())
-        var snapshot=ref.put(blob).on('state_changed',snapshot=>{
-            console.log(snapshot.totalBytes)
+        var snapshot=ref.put(blob).then(()=>{
+            ref.getDownloadURL().then(url=>{
+                this.setState({
+                    profilePicUrl:url
+                })
+                this.props.setProDetails(url)
+             }).then(()=>{
+                database.ref(`ProfilePics/${uid}/Pic`).set(this.state.profilePicUrl).then(()=>{
+                    this.setState({loading:false})
+                })
+             })
         })
     }
 
-    saveData= async()=>{
+    saveData=()=>{
+        this.setState({loading:true})
         const {Name,Username,Website,Bio}=this.state
         const details={Name,Username,Website,Bio}
         const uid=fbase.auth().currentUser.uid
-        await database.ref(`User/${uid}/uid`).set(details)
+        database.ref(`User/${uid}/uid`).set(details).then(()=>{
+            this.setState({loading:false})
+        })
     }
 
     launchCamera=()=>{
@@ -119,7 +133,7 @@ class EditProfile extends Component {
 
     render() {
         return (
-            <ScrollView style={styles.container}>
+            <View style={styles.container}>
                 <Modal
                     animationType="slide"
                     transparent={true}
@@ -154,8 +168,8 @@ class EditProfile extends Component {
 
                 <View style={styles.ImageSelector}>
                     {
-                        !this.props.proDetails.ImageFile.fileUri ? <Image source={require('../assets/icons/user.png')} style={styles.image}/>
-                         :<Image source={{uri:this.props.proDetails.ImageFile.fileUri}} style={styles.image}/>
+                        !this.state.ImageFile.fileUri ? <Image source={require('../assets/icons/user.png')} style={styles.image}/>
+                         :<Image source={{uri:this.state.ImageFile.fileUri}} style={styles.image}/>
                     }
                     <TouchableOpacity onPress={()=>this.setState({modalVisible:!this.state.modalVisible})}>
                         <Text style={styles.textLink}>Change Profile Photo</Text>
@@ -165,16 +179,20 @@ class EditProfile extends Component {
                     {
                         this.renderInputField()
                     }
-                    <View style={styles.saveTextBlock}>
-                        <TouchableOpacity onPress={()=>this.saveData()}>
-                            <Text style={styles.saveText}>Save Info</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity onPress={()=>this.saveImage()}>
-                            <Text style={{...styles.saveText,paddingVertical:'2%'}}>Save Image</Text>
-                        </TouchableOpacity>
-                    </View>
+                    {
+                        !this.state.loading ? (
+                            <View style={styles.saveTextBlock}>
+                                <TouchableOpacity onPress={()=>this.saveData()}>
+                                    <Text style={styles.saveText}>Save Info</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity onPress={()=>this.saveImage()}>
+                                    <Text style={{...styles.saveText,paddingVertical:'2%'}}>Save Image</Text>
+                                </TouchableOpacity>
+                            </View>
+                        ):<Spinner size="large"/>
+                    }
                 </View>
-            </ScrollView>
+            </View>
         )
     }
 }
@@ -264,10 +282,9 @@ const styles=StyleSheet.create({
       }
 })
 
-const mapStateToProps=({auth:{user},profileInfo:{proDetails}})=>{
+const mapStateToProps=({auth:{user}})=>{
     return{
-        user,
-        proDetails
+        user
     }
 }
 

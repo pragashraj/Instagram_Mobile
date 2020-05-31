@@ -4,12 +4,25 @@ import { View, Text ,StyleSheet , Image , TouchableOpacity} from 'react-native'
 import settingimage from '../../src/assets/icons/settingimage.png'
 import CustomButton from '../components/CustomButton'
 import {connect} from 'react-redux'
-import {storage,fbase} from '../config/config'
+import {database,fbase} from '../config/config'
 
 class ProfileScreen extends Component{
 
+    state={
+        profilePicUrl:""
+    }
+
     componentDidMount(){
-        
+        const uid=fbase.auth().currentUser.uid
+        var url=''
+        database.ref('ProfilePics').child(uid).child('Pic').on('value',function(snapshot){
+            const exist=(snapshot.val()!==null)
+            if(exist) url=snapshot.val()
+        })
+
+        this.setState({
+            profilePicUrl:url
+        })
     }
 
     EditProfile=()=>{
@@ -32,8 +45,8 @@ class ProfileScreen extends Component{
                 <View style={styles.headerMain}>
                     <View style={styles.profileImageBlock}>
                         {
-                            this.props.proDetails.ImageFile.fileUri===null  ? <Image source={require('../assets/icons/user.png')} style={styles.profileImage}/>
-                            :<Image source={{uri:this.props.proDetails.ImageFile.fileUri}} style={styles.profileImage}/>
+                            this.state.profilePicUrl===''? <Image source={require('../assets/icons/user.png')} style={styles.profileImage}/>
+                            :<Image source={{uri:this.state.profilePicUrl}} style={styles.profileImage}/>
                         }
                     </View>
                     <View style={styles.counterBlock}>

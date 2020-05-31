@@ -11,7 +11,7 @@ class Post extends Component {
                     </View>
 
                     <View style={styles.postHolderBlock}>
-                        <Text style={styles.postHolder}>PostHolder</Text>
+                        <Text style={styles.postHolder}>{this.props.author}</Text>
                     </View>
 
                     <View style={styles.moreBlock}>
@@ -23,7 +23,7 @@ class Post extends Component {
                 </View>
 
                 <View style={styles.post}>
-                    <Image source={require('../assets/icons/post.jpg')} style={styles.postContent}/>
+                    <Image source={{uri:this.props.url}} style={styles.postContent}/>
                 </View>
 
                 <View style={styles.userAction}>

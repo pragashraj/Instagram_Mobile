@@ -1,13 +1,21 @@
 import React from 'react'
 import { View, Image , StyleSheet,TouchableOpacity} from 'react-native'
 
-const StoryComponent = () => {
+const StoryComponent = ({pic}) => {
     return (
         <View>
             <View style={styles.storyBlock}>
-                <TouchableOpacity>
-                    <Image source={require('../assets/icons/nonStory.png')} style={styles.story}/>
-                </TouchableOpacity>
+                {
+                    pic ==='' ? (
+                        <TouchableOpacity>
+                            <Image source={require('../assets/icons/nonStory.png')} style={styles.story}/>
+                        </TouchableOpacity>
+                    ) :(
+                        <TouchableOpacity>
+                            <Image source={{uri:pic}} style={styles.story}/>
+                        </TouchableOpacity>
+                    )
+                }              
             </View>
         </View>
     )
@@ -21,10 +29,13 @@ const styles=StyleSheet.create({
         alignItems:'center'
     },
     story:{
-        width:90,
-        height:90,
-        borderRadius:45
+        width:70,
+        height:70,
+        borderRadius:35,
+        opacity:0.5
     }
 })
+
+
 
 export default StoryComponent
