@@ -10,6 +10,8 @@ import SearchScreen from './src/screens/SearchScreen'
 import AddPostScreen from './src/screens/AddPostScreen'
 import ActivityScreen from './src/screens/ActivityScreen'
 import EditProfile from './src/screens/EditProfile'
+import MessagesScreen from './src/screens/MessagesScreen' 
+import ChatScreen from './src/screens/ChatScreen' 
 
 import {createStackNavigator} from '@react-navigation/stack'
 import {NavigationContainer} from '@react-navigation/native'
@@ -123,6 +125,16 @@ const App = () => {
           <stack.Screen
             name="Edit_Profile"
             component={EditProfile}
+          />
+
+          <stack.Screen
+            name="Direct"
+            component={MessagesScreen}
+          />
+
+          <stack.Screen
+            name="Chats"
+            component={ChatScreen}
           />
       </stack.Navigator>
     </NavigationContainer>

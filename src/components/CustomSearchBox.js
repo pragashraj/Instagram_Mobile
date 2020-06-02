@@ -20,7 +20,7 @@ class CustomSearchBox extends Component {
                     autoCorrect={false}
                     style={styles.textInput}
                     placeholder="search"
-                    onChangeText={this.handleTextChange}
+                    onChangeText={(e)=>this.props.handleSearchInput(e)}
                 />
             </View>
         )
@@ -30,11 +30,8 @@ class CustomSearchBox extends Component {
 const styles=StyleSheet.create({
     textInput:{
         backgroundColor:'lightgray',
-        // width:'100%',
-        // height:'100%',
         borderRadius:10,
         fontSize:18,
-        // padding:'2%'
     }
 })
 

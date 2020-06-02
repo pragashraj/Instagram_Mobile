@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Text, View ,StyleSheet,Image,ScrollView ,TouchableOpacity,TextInput,FlatList,Modal,TouchableHighlight} from 'react-native'
+import { Text, View ,StyleSheet,Image ,TouchableOpacity,TextInput,FlatList,Modal,TouchableHighlight} from 'react-native'
 import ImagePicker from 'react-native-image-picker'
 import {connect} from 'react-redux'
 
@@ -139,7 +139,7 @@ class EditProfile extends Component {
                     transparent={true}
                     visible={this.state.modalVisible}
                     onRequestClose={() => {
-                    Alert.alert("Modal has been closed.");
+                        this.setState({modalVisible:!this.state.modalVisible})
                     }}
                 >
                     <View style={styles.centeredView}>

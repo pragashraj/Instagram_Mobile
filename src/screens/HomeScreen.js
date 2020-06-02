@@ -8,22 +8,38 @@ import {database,fbase} from '../config/config'
 import {connect} from 'react-redux'
 
 import {setProDetails} from '../redux/actions/setProfileDetails'
-import {launchCamera} from '../components/LaunchCamera'
+import ImagePicker from 'react-native-image-picker'
 
 class HomeScreen extends Component{
     state={
         posts:[],
         profilePicUrl:'',
-        Imagefile:{
-            filePath:null,
-            fileData:null,
-            fileUri:null
-        },
-        source:null
+        source:''
+    }
+
+     options={
+        storageOptions:{
+            skipBackup:true,
+            path:'images'
+        }
     }
 
     launchCameraComponent= ()=>{
-        launchCamera()
+        ImagePicker.launchCamera(this.options,(response)=>{
+            if (response.didCancel) {
+                console.log('User cancelled image picker');
+            } else if (response.error) {
+                console.log('ImagePicker Error: ', response.error);
+            } else if (response.customButton) {
+                console.log('User tapped custom button: ', response.customButton);
+                alert(response.customButton);
+            }else{
+                const source={uri:response.uri}
+                this.setState({
+                    source:source
+                })
+            } 
+        })
     }
 
     componentDidMount(){
@@ -67,7 +83,7 @@ class HomeScreen extends Component{
                     </View>
 
                     <View style={styles.message}>
-                        <TouchableOpacity>
+                        <TouchableOpacity onPress={()=>this.props.navigation.navigate('Direct')}>
                             <Image source={require('../assets/icons/message.png')}/>
                         </TouchableOpacity>
                     </View>
@@ -75,7 +91,11 @@ class HomeScreen extends Component{
 
                 <View style={styles.stories}>
                     <View style={styles.story}>
-                        <StoryComponent pic={this.state.profilePicUrl}/>
+                        {
+                            this.state.source.uri !=='' ? <StoryComponent pic={this.state.source.uri}/> :                
+                            this.state.profilePicUrl !=='' ? <StoryComponent pic={this.state.profilePicUrl}/> :
+                            <StoryComponent pic=''/>
+                        }
                     </View>
                 </View>
 

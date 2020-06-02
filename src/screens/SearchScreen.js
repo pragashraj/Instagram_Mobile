@@ -1,15 +1,25 @@
-import React from 'react'
-import { View, Text , StyleSheet , FlatList , Image} from 'react-native'
+import React,{Component} from 'react'
+import { View , StyleSheet , FlatList , Image} from 'react-native'
 
 import CustomSearchBox from '../components/CustomSearchBox'
 
-const SearchScreen = () => {
+class SearchScreen extends Component {
+    state={
+        searchInput:''
+    }
+    
+    handleSearchInput=(e)=>{
+        this.setState({
+            searchInput:e
+        })
+    }
 
+    render(){
     return (
         <View style={styles.container}>
             <View style={styles.searchBlock}>
                 <View style={styles.searchBox}>
-                    <CustomSearchBox/>
+                    <CustomSearchBox handleSearchInput={this.handleSearchInput}/>
                 </View>
             </View>
 
@@ -32,6 +42,8 @@ const SearchScreen = () => {
     )
 }
 
+}
+
 const styles=StyleSheet.create({
     container:{
         backgroundColor:'white'
@@ -39,7 +51,7 @@ const styles=StyleSheet.create({
 
     searchBlock:{
         width:'100%',
-        height:'12%',
+        height:80,
         justifyContent:'center',
         alignItems:'center',
     },

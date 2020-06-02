@@ -6,7 +6,7 @@ const StoryComponent = ({pic}) => {
         <View>
             <View style={styles.storyBlock}>
                 {
-                    pic ==='' ? (
+                    pic==='' ? (
                         <TouchableOpacity>
                             <Image source={require('../assets/icons/nonStory.png')} style={styles.story}/>
                         </TouchableOpacity>
