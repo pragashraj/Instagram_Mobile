@@ -1,5 +1,5 @@
 import React,{Component} from 'react'
-import { View, Text , StyleSheet , Image , TouchableOpacity,ScrollView,FlatList} from 'react-native'
+import { View, Text , StyleSheet , Image , TouchableOpacity,FlatList} from 'react-native'
 
 import Post from '../components/Post'
 import StoryComponent from '../components/StoryComponent'
@@ -14,7 +14,9 @@ class HomeScreen extends Component{
     state={
         posts:[],
         profilePicUrl:'',
-        source:''
+        source:{
+            uri:''
+        }
     }
 
      options={

@@ -27,8 +27,8 @@ class MessagesScreen extends Component{
                 <View style={styles.messagesBlock}>
                     <Text style={styles.messTxt}>Messages</Text>
                     <View style={styles.messBx}>
-                        <MessageBox name="Mr.John" navigation={this.props.navigation}/>
-                        <MessageBox name="Spr_Raj" navigation={this.props.navigation}/>
+                        <MessageBox name="Mr.John" navigation={this.props.navigation} newIndicator={true}/>
+                        <MessageBox name="Spr_Raj" navigation={this.props.navigation} newIndicator={false}/>
                     </View>
                 </View>
             </View>

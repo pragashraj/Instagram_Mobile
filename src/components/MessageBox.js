@@ -1,7 +1,7 @@
 import React from 'react'
 import { View, Text,Image,StyleSheet,TouchableOpacity } from 'react-native'
 
-const MessageBox = ({name,navigation}) => {
+const MessageBox = ({name,navigation,newIndicator}) => {
     return (
         <View style={styles.container}>
             <TouchableOpacity onPress={()=>navigation.navigate('Chats',{name})}>
@@ -15,7 +15,9 @@ const MessageBox = ({name,navigation}) => {
                     </View>
                     
                     <View style={styles.newBlock}>
-                        <Image source={require('../assets/icons/newMess.png')} style={styles.new}/>
+                        {
+                            newIndicator ? <Image source={require('../assets/icons/newMess.png')} style={styles.new}/> :null
+                        }
                     </View>              
                 </View>
             </TouchableOpacity>

@@ -9,19 +9,47 @@ import {database,fbase} from '../config/config'
 class ProfileScreen extends Component{
 
     state={
-        profilePicUrl:""
+        profilePicUrl:"",
+        profileDetails:{},
+        gridView:true,
+        calView:false,
+        Statistics:{}
     }
 
     componentDidMount(){
         const uid=fbase.auth().currentUser.uid
         var url=''
+        var details={
+            Bio:"",
+            Name:"user_name",
+            Username:'user_name',
+            Website:''
+        }
+        var statistics={
+            posts:0,
+            followers:0,
+            following:0
+        }
         database.ref('ProfilePics').child(uid).child('Pic').on('value',function(snapshot){
             const exist=(snapshot.val()!==null)
             if(exist) url=snapshot.val()
         })
 
+        database.ref('ProfileDetails').child(uid).on('value',function(snapshot){
+            const exist=(snapshot.val()!==null)
+            if(exist) details=snapshot.val()
+        })
+
+        database.ref('Statistics').child(uid).on('value',function(snapshot){
+            const exist=(snapshot.val()!==null)
+            if(exist) statistics=snapshot.val()
+        })
+
+
         this.setState({
-            profilePicUrl:url
+            profilePicUrl:url,
+            profileDetails:details,
+            Statistics:statistics
         })
     }
 
@@ -34,7 +62,7 @@ class ProfileScreen extends Component{
             <View style={styles.container}>
                 <View style={styles.header}>
                     <View style={styles.usernmeBlock}>
-                        <Text style={styles.username}>user_name</Text>
+                        <Text style={styles.username}>{this.state.profileDetails.Username}</Text>
                     </View>
                     
                 <TouchableOpacity style={styles.settings}>
@@ -50,17 +78,17 @@ class ProfileScreen extends Component{
                         }
                     </View>
                     <View style={styles.counterBlock}>
-                        <Text style={styles.counter}>10</Text>
+                        <Text style={styles.counter}>{this.state.Statistics.posts}</Text>
                         <Text style={styles.counterText}>Posts</Text>
                     </View>
 
                     <View style={styles.counterBlock}>
-                        <Text style={styles.counter}>22</Text>
+                        <Text style={styles.counter}>{this.state.Statistics.followers}</Text>
                         <Text style={styles.counterText}>Followers</Text>
                     </View>
 
                     <View style={styles.counterBlock}>
-                        <Text style={styles.counter}>51</Text>
+                        <Text style={styles.counter}>{this.state.Statistics.following}</Text>
                         <Text style={styles.counterText}>Following</Text>
                     </View>
 
@@ -80,15 +108,15 @@ class ProfileScreen extends Component{
                 </View>
 
                 <View style={styles.LinkBlock}>
-                    <TouchableOpacity style={true ? styles.gridBlock :styles.gridBlock02}>
+                    <TouchableOpacity style={true ? styles.gridBlock :styles.gridBlock02} onPress={()=>this.setState({gridView:true,calView:false})}>
                         <View>
-                            <Image source={require('../assets/icons/grid.png')} style={ true ? null:styles.grid} />
+                            <Image source={require('../assets/icons/grid.png')} style={ this.state.gridView ? null:styles.grid} />
                         </View>
                     </TouchableOpacity>
 
-                    <TouchableOpacity style={false ? styles.gridBlock :styles.gridBlock02}>
+                    <TouchableOpacity style={false ? styles.gridBlock :styles.gridBlock02} onPress={()=>this.setState({gridView:false,calView:true})}>
                         <View>
-                            <Image source={require('../assets/icons/cal.png')} style={ false ? null:styles.grid} />
+                            <Image source={require('../assets/icons/cal.png')} style={ this.state.calView ? null:styles.grid} />
                         </View>
                     </TouchableOpacity>
                 </View>
@@ -116,7 +144,9 @@ const styles=StyleSheet.create({
     header:{
         width:'100%',
         height:'9%',
-        flexDirection:'row'
+        flexDirection:'row',
+        borderBottomWidth:0.3,
+        elevation:3
     },
 
     usernmeBlock:{
@@ -126,7 +156,7 @@ const styles=StyleSheet.create({
     },
 
     username:{
-        marginLeft:'5%',
+        marginLeft:'12%',
         fontSize:25
     },
 
@@ -224,7 +254,8 @@ const styles=StyleSheet.create({
         height:'100%',
         alignItems:'center',
         justifyContent:'center',
-        borderBottomWidth:1,
+        borderBottomWidth:0.4,
+        elevation:2
     },
 
     gridBlock02:{
@@ -232,10 +263,12 @@ const styles=StyleSheet.create({
         height:'100%',
         alignItems:'center',
         justifyContent:'center',
+        borderBottomWidth:0.4,
+        elevation:2
     },
 
     grid:{
-        opacity:0.6
+        opacity:0.4,
     },
 
     contentsBlock:{
