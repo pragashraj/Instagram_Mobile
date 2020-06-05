@@ -11,7 +11,8 @@ import AddPostScreen from './src/screens/AddPostScreen'
 import ActivityScreen from './src/screens/ActivityScreen'
 import EditProfile from './src/screens/EditProfile'
 import MessagesScreen from './src/screens/MessagesScreen' 
-import ChatScreen from './src/screens/ChatScreen' 
+import ChatScreen from './src/screens/ChatScreen'
+import PostComments from './src/screens/PostComments'  
 
 import {createStackNavigator} from '@react-navigation/stack'
 import {NavigationContainer} from '@react-navigation/native'
@@ -136,6 +137,12 @@ const App = () => {
             name="Chats"
             component={ChatScreen}
           />
+
+          <stack.Screen
+            name="Comments"
+            component={PostComments}
+          />
+
       </stack.Navigator>
     </NavigationContainer>
   )

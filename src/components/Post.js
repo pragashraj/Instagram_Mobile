@@ -1,8 +1,30 @@
-import React, { Component } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Text, View , StyleSheet , Image , TouchableOpacity} from 'react-native'
+import {database} from '../config/config'
 
-class Post extends Component {
-    render() {
+const Post =({navigation,post})=> {
+    const [postLikes,setLikes]=useState(0)
+    const [postComments,setComments]=useState([])
+
+        useEffect(()=>{
+            const id=post.id
+            var commentsTmp=[]
+            var likesTmp=0
+            database.ref('PostStatistics').child(id).on('value',function(snapshot){
+                snapshot.child('comments').forEach(item => {
+                     var temp = item.val()
+                     commentsTmp.push(temp);
+                });
+
+                const exist=(snapshot.val()!==null)
+                if(exist) likesTmp=snapshot.child('likes').child('count').val()
+            })
+
+            setComments(commentsTmp)
+            setLikes(likesTmp)
+
+        },[])
+
         return (
             <View>
                 <View style={styles.postHeader}>
@@ -11,11 +33,11 @@ class Post extends Component {
                     </View>
 
                     <View style={styles.postHolderBlock}>
-                        <Text style={styles.postHolder}>{this.props.author}</Text>
+                        <Text style={styles.postHolder}>{post.author}</Text>
                     </View>
 
                     <View style={styles.moreBlock}>
-                        <TouchableOpacity>
+                        <TouchableOpacity onPress={()=>console.warn(postData)}>
                             <Image source={require('../assets/icons/more.png')} style={styles.moreImage}/>
                         </TouchableOpacity>
                     </View>
@@ -23,7 +45,7 @@ class Post extends Component {
                 </View>
 
                 <View style={styles.post}>
-                    <Image source={{uri:this.props.url}} style={styles.postContent}/>
+                    <Image source={{uri:post.url}} style={styles.postContent}/>
                 </View>
 
                 <View style={styles.userAction}>
@@ -31,18 +53,14 @@ class Post extends Component {
                         <Image source={require('../assets/icons/like.png')} style={styles.actions}/>
                     </TouchableOpacity>
 
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={()=>{navigation.navigate('Comments',{post,postLikes,postComments})}}>
                         <Image source={require('../assets/icons/comments.png')} style={styles.actions}/>
                     </TouchableOpacity>
 
-                    <TouchableOpacity>
-                        <Image source={require('../assets/icons/message.png')} style={styles.actions}/>
-                    </TouchableOpacity>
-    
                 </View>
 
                 <View style={styles.likesCountBlock}>
-                    <Text style={styles.likesCount}>Liked by 123</Text>
+                    <Text style={styles.likesCount}>Liked by  {postLikes} </Text>
                 </View>
 
                 <View style={styles.commentsBlock}>
@@ -51,7 +69,6 @@ class Post extends Component {
 
             </View>
         )
-    }
 }
 
 const styles=StyleSheet.create({

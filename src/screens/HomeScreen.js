@@ -9,6 +9,7 @@ import {connect} from 'react-redux'
 
 import {setProDetails} from '../redux/actions/setProfileDetails'
 import ImagePicker from 'react-native-image-picker'
+import Spinner from '../components/Spinner'
 
 class HomeScreen extends Component{
     state={
@@ -16,7 +17,8 @@ class HomeScreen extends Component{
         profilePicUrl:'',
         source:{
             uri:''
-        }
+        },
+        loading:true
     }
 
      options={
@@ -47,6 +49,8 @@ class HomeScreen extends Component{
     componentDidMount(){
         const uid=fbase.auth().currentUser.uid
         var data=[]
+        var url=''
+
         database.ref('Posts').child(uid).on('value',function(snapshot){
             snapshot.forEach(item => {
                 var temp = { posts: item.val() };
@@ -55,7 +59,7 @@ class HomeScreen extends Component{
             });
         })
 
-        var url=''
+        
         database.ref('ProfilePics').child(uid).child('Pic').on('value',function(snapshot){
             const exist=(snapshot.val()!==null)
             if(exist) url=snapshot.val()
@@ -63,11 +67,11 @@ class HomeScreen extends Component{
 
         this.setState({
             posts:data,
-            profilePicUrl:url
+            profilePicUrl:url,
+            loading:false
         })
 
         this.props.setProDetails(url)
-       
     }
 
     render(){
@@ -102,13 +106,20 @@ class HomeScreen extends Component{
                 </View>
 
                 <View style={styles.posts}>
+
+                {
+                    this.state.loading ? <Spinner size="large" /> : 
                     <FlatList
                         data={this.state.posts}
                         keyExtractor={item=>item.posts.posted}
                         renderItem={({item})=>{
-                          return <Post author={item.posts.author} url={item.posts.url}/>
+                        return <Post 
+                                    navigation={this.props.navigation}
+                                    post={item.posts}
+                                />
                         }}
-                    />    
+                    />  
+                }  
                 </View>
             </View>
         )

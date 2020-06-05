@@ -18,7 +18,8 @@ class AddPostScreen extends Component{
             caption:'',
             author:'',
             url:'',
-            posted:null
+            posted:null,
+            id:''
         },
         loading:false
     }
@@ -95,7 +96,8 @@ class AddPostScreen extends Component{
                         author:author,
                         url:res,
                         posted:date.toString(),
-                        caption:this.state.captionTxt
+                        caption:this.state.captionTxt,
+                        id:ImageId.toString()
                    }
                })
             }).then(()=>{
