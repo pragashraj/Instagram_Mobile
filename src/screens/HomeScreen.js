@@ -9,7 +9,6 @@ import {connect} from 'react-redux'
 
 import {setProDetails} from '../redux/actions/setProfileDetails'
 import ImagePicker from 'react-native-image-picker'
-import Spinner from '../components/Spinner'
 
 class HomeScreen extends Component{
     state={
@@ -18,7 +17,6 @@ class HomeScreen extends Component{
         source:{
             uri:''
         },
-        loading:true
     }
 
      options={
@@ -68,7 +66,6 @@ class HomeScreen extends Component{
         this.setState({
             posts:data,
             profilePicUrl:url,
-            loading:false
         })
 
         this.props.setProDetails(url)
@@ -106,9 +103,6 @@ class HomeScreen extends Component{
                 </View>
 
                 <View style={styles.posts}>
-
-                {
-                    this.state.loading ? <Spinner size="large" /> : 
                     <FlatList
                         data={this.state.posts}
                         keyExtractor={item=>item.posts.posted}
@@ -119,7 +113,6 @@ class HomeScreen extends Component{
                                 />
                         }}
                     />  
-                }  
                 </View>
             </View>
         )

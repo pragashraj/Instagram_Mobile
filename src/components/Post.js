@@ -2,9 +2,14 @@ import React, { useEffect, useState } from 'react'
 import { Text, View , StyleSheet , Image , TouchableOpacity} from 'react-native'
 import {database} from '../config/config'
 
-const Post =({navigation,post})=> {
+import {connect} from 'react-redux'
+
+import {fetchPostStatistics} from '../redux/actions/firebaseActions'
+
+const Post =({navigation,post,postStatistics,fetchPostStatistics})=> {
     const [postLikes,setLikes]=useState(0)
     const [postComments,setComments]=useState([])
+    const [postLiked,setPostLiked]=useState(false)
 
         useEffect(()=>{
             const id=post.id
@@ -22,8 +27,23 @@ const Post =({navigation,post})=> {
 
             setComments(commentsTmp)
             setLikes(likesTmp)
-
+            
         },[])
+
+        const handleLike=()=>{
+            setPostLiked(!postLiked)
+            const id=post.id
+            var counts
+            // if(!postLiked){
+            //     counts=postStatistics.postStatistics.likes+1
+            //     database.ref('PostStatistics').child(id).child('likes').update({count:counts})
+            // }else{
+            //     counts=postStatistics.postStatistics.likes+2
+            //     database.ref('PostStatistics').child(id).child('likes').update({count:counts})
+            // }
+
+            console.warn(postStatistics)
+        }
 
         return (
             <View>
@@ -49,8 +69,8 @@ const Post =({navigation,post})=> {
                 </View>
 
                 <View style={styles.userAction}>
-                    <TouchableOpacity>
-                        <Image source={require('../assets/icons/like.png')} style={styles.actions}/>
+                    <TouchableOpacity onPress={()=>handleLike()}>
+                        <Image source={!postLiked ? require('../assets/icons/like.png'):  require('../assets/icons/afterLiked.png')} style={styles.actions}/>
                     </TouchableOpacity>
 
                     <TouchableOpacity onPress={()=>{navigation.navigate('Comments',{post,postLikes,postComments})}}>
@@ -161,4 +181,16 @@ const styles=StyleSheet.create({
     }
 })
 
-export default Post
+const mapStateToProps=({postStat:postStatistics})=>{
+    return{
+        postStatistics
+    }
+}
+
+const mapDispatchToProps=(dispatch)=>{
+    return{
+        fetchPostStatistics:postData=>dispatch(fetchPostStatistics(postData))
+    }
+}
+
+export default connect(mapStateToProps,mapDispatchToProps)(Post)
