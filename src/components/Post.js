@@ -1,50 +1,67 @@
-import React, { useEffect, useState } from 'react'
+import React, {Component } from 'react'
 import { Text, View , StyleSheet , Image , TouchableOpacity} from 'react-native'
 import {database} from '../config/config'
 
 import {connect} from 'react-redux'
 
-import {fetchPostStatistics} from '../redux/actions/firebaseActions'
+import {setPostStatistics} from '../redux/actions/firebaseActions'
 
-const Post =({navigation,post,postStatistics,fetchPostStatistics})=> {
-    const [postLikes,setLikes]=useState(0)
-    const [postComments,setComments]=useState([])
-    const [postLiked,setPostLiked]=useState(false)
+class Post extends Component {
 
-        useEffect(()=>{
-            const id=post.id
-            var commentsTmp=[]
-            var likesTmp=0
-            database.ref('PostStatistics').child(id).on('value',function(snapshot){
-                snapshot.child('comments').forEach(item => {
-                     var temp = item.val()
-                     commentsTmp.push(temp);
-                });
+    state={
+        liked:false,
+        likes:1,
+        comments:null,
+        stat:[]
+    }
 
-                const exist=(snapshot.val()!==null)
-                if(exist) likesTmp=snapshot.child('likes').child('count').val()
+    handleFetch=()=>{
+        const id=this.props.post.id
+        var commentsTmp=[]
+        var likesTmp=0
+        database.ref('PostStatistics').child(id).once('value').then(snapshot=>{
+            snapshot.child('comments').forEach(item => {
+                var temp = item.val()
+                commentsTmp.push(temp);
             })
+            this.setState({
+                comments:commentsTmp
+            })
+        })
 
-            setComments(commentsTmp)
-            setLikes(likesTmp)
-            
-        },[])
+        database.ref('PostStatistics').child(id).once('value').then(snapshot=>{
+            const exist=(snapshot.val()!==null)
+            if(exist) likesTmp=snapshot.child('likes').child('count').val()
+            this.setState({
+                likes:likesTmp
+            }) 
+        })
 
-        const handleLike=()=>{
-            setPostLiked(!postLiked)
-            const id=post.id
-            var counts
-            // if(!postLiked){
-            //     counts=postStatistics.postStatistics.likes+1
-            //     database.ref('PostStatistics').child(id).child('likes').update({count:counts})
-            // }else{
-            //     counts=postStatistics.postStatistics.likes+2
-            //     database.ref('PostStatistics').child(id).child('likes').update({count:counts})
-            // }
+    }
 
-            console.warn(postStatistics)
+    componentDidMount(){
+        this.handleFetch()
+    }
+
+    handleLike=()=>{
+        this.setState({
+            liked:!this.state.liked
+        })
+        const id=this.props.post.id
+        var counts
+        if(!this.state.liked){
+            counts=this.state.likes + 1 ;
+            database.ref('PostStatistics').child(id).child('likes').update({count:counts})
+            this.handleFetch()
+        }else{
+            counts=this.state.likes + - 1;
+            database.ref('PostStatistics').child(id).child('likes').update({count:counts})
+            this.handleFetch()
         }
+        this.props.setPostStatistics({postId:id,liked:this.state.liked})
+    }
 
+    render(){
         return (
             <View>
                 <View style={styles.postHeader}>
@@ -53,11 +70,11 @@ const Post =({navigation,post,postStatistics,fetchPostStatistics})=> {
                     </View>
 
                     <View style={styles.postHolderBlock}>
-                        <Text style={styles.postHolder}>{post.author}</Text>
+                        <Text style={styles.postHolder}>{this.props.post.author}</Text>
                     </View>
 
                     <View style={styles.moreBlock}>
-                        <TouchableOpacity onPress={()=>console.warn(postData)}>
+                        <TouchableOpacity onPress={()=>console.warn("more")}>
                             <Image source={require('../assets/icons/more.png')} style={styles.moreImage}/>
                         </TouchableOpacity>
                     </View>
@@ -65,22 +82,27 @@ const Post =({navigation,post,postStatistics,fetchPostStatistics})=> {
                 </View>
 
                 <View style={styles.post}>
-                    <Image source={{uri:post.url}} style={styles.postContent}/>
+                    <Image source={{uri:this.props.post.url}} style={styles.postContent}/>
                 </View>
 
                 <View style={styles.userAction}>
-                    <TouchableOpacity onPress={()=>handleLike()}>
-                        <Image source={!postLiked ? require('../assets/icons/like.png'):  require('../assets/icons/afterLiked.png')} style={styles.actions}/>
+                    <TouchableOpacity onPress={this.handleLike}>
+                        <Image source={this.props.postsStat.postsStat.liked ? require('../assets/icons/like.png'):  require('../assets/icons/afterLiked.png')} style={styles.actions}/>
                     </TouchableOpacity>
 
-                    <TouchableOpacity onPress={()=>{navigation.navigate('Comments',{post,postLikes,postComments})}}>
+                    <TouchableOpacity onPress={()=>{
+                        const post=this.props.post
+                        const postLikes=this.state.likes
+                        const postComments=this.state.comments
+                        this.props.navigation.navigate('Comments',{post,postLikes,postComments})
+                    }}>
                         <Image source={require('../assets/icons/comments.png')} style={styles.actions}/>
                     </TouchableOpacity>
 
                 </View>
 
                 <View style={styles.likesCountBlock}>
-                    <Text style={styles.likesCount}>Liked by  {postLikes} </Text>
+                    <Text style={styles.likesCount}>Liked by  {this.state.likes} </Text>
                 </View>
 
                 <View style={styles.commentsBlock}>
@@ -89,6 +111,7 @@ const Post =({navigation,post,postStatistics,fetchPostStatistics})=> {
 
             </View>
         )
+    }
 }
 
 const styles=StyleSheet.create({
@@ -181,15 +204,15 @@ const styles=StyleSheet.create({
     }
 })
 
-const mapStateToProps=({postStat:postStatistics})=>{
+const mapStateToProps=({postStat:postsStat})=>{
     return{
-        postStatistics
+        postsStat
     }
 }
 
 const mapDispatchToProps=(dispatch)=>{
     return{
-        fetchPostStatistics:postData=>dispatch(fetchPostStatistics(postData))
+        setPostStatistics:postData=>dispatch(setPostStatistics(postData))
     }
 }
 

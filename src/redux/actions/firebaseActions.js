@@ -1,5 +1,4 @@
-
-export const fetchPostStatistics=postData=>({
-    type:"FETCH_POST_STAT",
+export const setPostStatistics=postData=>({
+    type:"SET_POST_STAT",
     payload:postData
 })

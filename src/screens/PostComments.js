@@ -1,7 +1,42 @@
 import React, { Component } from 'react'
 import { Text, View ,Image,StyleSheet,FlatList,TextInput,TouchableOpacity} from 'react-native'
 
+import {database,fbase} from '../config/config'
+
 class PostComments extends Component {
+
+    state={
+        ownComment:''
+    }
+
+    handleInput=(e)=>{
+        this.setState({
+            ownComment:e
+        })
+    }
+
+    sendComment=()=>{
+        const id=this.props.route.params.post.id
+        const uid=fbase.auth().currentUser.uid
+        const ownCom=this.state.ownComment
+        var details
+
+        if(ownCom.length>0){
+            database.ref('ProfileDetails').child(uid).on('value',function(snapshot){
+                const exist=(snapshot.val()!==null)
+                if(exist) details=snapshot.val()
+            })
+    
+            const newComment={comment:this.state.ownComment,commentor:details.Username}
+            database.ref('PostStatistics').child(id).child('comments').child(details.Username).set(newComment)
+        }
+
+        this.setState({
+            ownComment:''
+        })
+        
+    }
+
     render() {
         return (
             <View>
@@ -38,7 +73,7 @@ class PostComments extends Component {
                             onChangeText={(e)=>this.handleInput(e)}
                             placeholder="Your comment Here"
                         />
-                        <TouchableOpacity style={styles.sendImgBlock}>
+                        <TouchableOpacity style={styles.sendImgBlock} onPress={this.sendComment}>
                             <Image 
                                 source={require('../assets/icons/sendChat.png')} 
                                 style={styles.sendImg}
