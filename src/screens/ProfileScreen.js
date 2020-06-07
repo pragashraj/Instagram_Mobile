@@ -6,6 +6,8 @@ import CustomButton from '../components/CustomButton'
 import {connect} from 'react-redux'
 import {database,fbase} from '../config/config'
 
+import OwnPosts from '../components/OwnPosts'
+
 class ProfileScreen extends Component{
 
     state={
@@ -26,7 +28,7 @@ class ProfileScreen extends Component{
             Website:''
         }
         var statistics={
-            posts:0,
+            posts:1,
             followers:0,
             following:0
         }
@@ -122,8 +124,7 @@ class ProfileScreen extends Component{
                 </View>
 
                 <View style={styles.contentsBlock}>
-                    <Text style={styles.contentTitle}>Profile</Text>
-                    <Text style={styles.message}>When you share photos & videos they'll be here</Text>
+                    <OwnPosts/>
                 </View>
             </View>
         )
@@ -277,16 +278,6 @@ const styles=StyleSheet.create({
         marginLeft:'2%',
     },
 
-    contentTitle:{
-        fontSize:35,
-        alignSelf:'center',
-        marginTop:'1%'
-    },
-
-    message:{
-        alignSelf:'center',
-        opacity:0.5
-    },
 })
 
 const mapStateToProps=({profileInfo:{proDetails}})=>{

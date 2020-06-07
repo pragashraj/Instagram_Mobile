@@ -12,7 +12,8 @@ class Post extends Component {
         liked:false,
         likes:1,
         comments:null,
-        stat:[]
+        stat:[],
+        profilePicUrl:''
     }
 
     handleFetch=()=>{
@@ -37,6 +38,19 @@ class Post extends Component {
             }) 
         })
 
+    }
+
+    fetchProfilePic=()=>{
+        const authorId=this.props.post.authorId
+        var url=''
+        database.ref('ProfilePics').child(authorId).child('Pic').on('value',function(snapshot){
+            const exist=(snapshot.val()!==null)
+            if(exist) url=snapshot.val()
+        })
+
+        this.setState.apply({
+            profilePicUrl:url
+        })
     }
 
     componentDidMount(){
@@ -94,7 +108,7 @@ class Post extends Component {
                         const post=this.props.post
                         const postLikes=this.state.likes
                         const postComments=this.state.comments
-                        this.props.navigation.navigate('Comments',{post,postLikes,postComments})
+                        this.props.navigation.navigate('Comments',{post})
                     }}>
                         <Image source={require('../assets/icons/comments.png')} style={styles.actions}/>
                     </TouchableOpacity>

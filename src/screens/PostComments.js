@@ -6,8 +6,35 @@ import {database,fbase} from '../config/config'
 class PostComments extends Component {
 
     state={
-        ownComment:''
+        ownComment:'',
+        comments:null,
+        likes:''
     }
+
+    handleFetch=()=>{
+        const id=this.props.route.params.post.id
+        var commentsTmp=[]
+        var likesTmp=0
+        database.ref('PostStatistics').child(id).once('value').then(snapshot=>{
+            snapshot.child('comments').forEach(item => {
+                var temp = item.val()
+                commentsTmp.push(temp);
+            })
+            this.setState({
+                comments:commentsTmp
+            })
+        })
+
+        database.ref('PostStatistics').child(id).once('value').then(snapshot=>{
+            const exist=(snapshot.val()!==null)
+            if(exist) likesTmp=snapshot.child('likes').child('count').val()
+            this.setState({
+                likes:likesTmp
+            }) 
+        })
+
+    }
+
 
     handleInput=(e)=>{
         this.setState({
@@ -19,6 +46,7 @@ class PostComments extends Component {
         const id=this.props.route.params.post.id
         const uid=fbase.auth().currentUser.uid
         const ownCom=this.state.ownComment
+        const commentId=Math.floor(Math.random()*1000)
         var details
 
         if(ownCom.length>0){
@@ -27,14 +55,18 @@ class PostComments extends Component {
                 if(exist) details=snapshot.val()
             })
     
-            const newComment={comment:this.state.ownComment,commentor:details.Username}
+            const newComment={comment:this.state.ownComment,commentor:details.Username,commentId}
             database.ref('PostStatistics').child(id).child('comments').child(details.Username).set(newComment)
         }
 
         this.setState({
             ownComment:''
         })
-        
+        this.handleFetch()
+    }
+
+    componentDidMount(){
+        this.handleFetch()
     }
 
     render() {
@@ -50,13 +82,13 @@ class PostComments extends Component {
                     </View>
 
                     <View style={styles.likes}>
-                        <Text style={styles.likesTxt}>Liked By {this.props.route.params.postLikes}</Text>
+                        <Text style={styles.likesTxt}>Liked By {this.state.likes}</Text>
                         <Text >Comments.....</Text>
                     </View>
 
                     <View style={styles.comments}>
                         <FlatList
-                                data={this.props.route.params.postComments}
+                                data={this.state.comments}
                                 keyExtractor={item=>item.commentor}
                                 renderItem={({item})=>{
                                     return <View style={styles.eachBlock}>

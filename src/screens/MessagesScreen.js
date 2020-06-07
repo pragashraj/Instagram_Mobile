@@ -1,18 +1,30 @@
 import React ,{Component} from 'react'
-import {View,Text,StyleSheet} from 'react-native'
+import {View,Text,StyleSheet,FlatList} from 'react-native'
 
 import CustomSearchBox from '../components/CustomSearchBox'
 import MessageBox from '../components/MessageBox'
 
+import {fbase} from '../config/config'
+
+
 class MessagesScreen extends Component{
     state={
-        searchInput:''
+        searchInput:'',
+        message:[
+            {messId:1,name:"Mr.John",newIndicator:true},
+            {messId:2,name:"Spr_Raj",newIndicator:false},
+            {messId:3,name:"Mr.Kamal",newIndicator:false},
+        ]
     }
 
     handleSearchInput=(e)=>{
         this.setState({
             searchInput:e
         })
+    }
+
+    componentDidMount(){
+        const uid=fbase.auth().currentUser.uid
     }
 
     render(){
@@ -27,8 +39,15 @@ class MessagesScreen extends Component{
                 <View style={styles.messagesBlock}>
                     <Text style={styles.messTxt}>Messages</Text>
                     <View style={styles.messBx}>
-                        <MessageBox name="Mr.John" navigation={this.props.navigation} newIndicator={true}/>
-                        <MessageBox name="Spr_Raj" navigation={this.props.navigation} newIndicator={false}/>
+                        <FlatList
+                            data={this.state.message}
+                            keyExtractor={item=>item.messId}
+                            renderItem={({item})=>{
+                                return(
+                                    <MessageBox name={item.name} navigation={this.props.navigation} newIndicator={item.newIndicator}/>
+                                )
+                            }}
+                        />
                     </View>
                 </View>
             </View>

@@ -4,7 +4,7 @@ import { View, Text, StyleSheet , TouchableOpacity ,Image} from 'react-native'
 const CustomButton = ({btnTitle,icon,handleRegister}) => {
     return (
         <TouchableOpacity onPress={()=>handleRegister()}>
-            <View style={styles.container}>
+            <View style={{...styles.container}}>
                 {
                     icon ? <Image source={require('../assets/icons/fb.png')}/> :null
                 }
