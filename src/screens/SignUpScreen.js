@@ -57,7 +57,11 @@ class SignUpScreen extends Component {
                 </View>
 
                 <View style={styles.btnBlock}>
-                    <CustomButton btnTitle="Log in With Facebook" icon={true} handleRegister={()=>{}}/>
+                    <CustomButton 
+                        btnTitle="Log in With Facebook" 
+                        icon={true} handleRegister={()=>{}}
+                        registerBtn={true}
+                    />
                 </View>
 
                 <View style={styles.orBlock}>
@@ -83,7 +87,13 @@ class SignUpScreen extends Component {
 
                         <View style={styles.loginBtn}>
                         {
-                            this.state.loading ? <Spinner size="large"/> :<CustomButton btnTitle="Sign up" icon={false} handleRegister={this.handleRegister}/>
+                            this.state.loading ? <Spinner size="large"/> :
+                            <CustomButton 
+                                btnTitle="Sign up" 
+                                icon={false} 
+                                handleRegister={this.handleRegister}
+                                registerBtn={true}
+                            />
                         }                      
                         </View>
                 </View>

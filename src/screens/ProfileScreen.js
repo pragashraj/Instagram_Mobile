@@ -7,6 +7,7 @@ import {connect} from 'react-redux'
 import {database,fbase} from '../config/config'
 
 import OwnPosts from '../components/OwnPosts'
+import SavedPost from '../components/SavedPost'
 
 class ProfileScreen extends Component{
 
@@ -67,7 +68,7 @@ class ProfileScreen extends Component{
                         <Text style={styles.username}>{this.state.profileDetails.Username}</Text>
                     </View>
                     
-                <TouchableOpacity style={styles.settings}>
+                <TouchableOpacity style={styles.settings} onPress={()=>{this.props.navigation.navigate('SearchedProfile')}}>
                         <Image source={settingimage} style={styles.settingImage}/>
                 </TouchableOpacity>
                 </View>
@@ -97,7 +98,12 @@ class ProfileScreen extends Component{
                 </View>
 
                 <View style={styles.editProfileBlock}>
-                    <CustomButton btnTitle="Edit Profile" icon={false} handleRegister={this.EditProfile} />
+                    <CustomButton 
+                        btnTitle="Edit Profile" 
+                        icon={false} 
+                        handleRegister={this.EditProfile} 
+                        registerBtn={false}    
+                    />
                 </View>
 
                 <View style={styles.highlightsBlock}>
@@ -124,7 +130,7 @@ class ProfileScreen extends Component{
                 </View>
 
                 <View style={styles.contentsBlock}>
-                    <OwnPosts/>
+                    {this.state.gridView ? <OwnPosts/> : <SavedPost/>}
                 </View>
             </View>
         )

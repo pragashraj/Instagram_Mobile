@@ -119,9 +119,7 @@ class Post extends Component {
                     <Text style={styles.likesCount}>Liked by  {this.state.likes} </Text>
                 </View>
 
-                <View style={styles.commentsBlock}>
-                    <Text style={styles.comments}>view comments .....</Text>
-                </View>
+              
 
             </View>
         )
@@ -204,18 +202,19 @@ const styles=StyleSheet.create({
     },
 
 
-    commentsBlock:{
-        width:'100%',
-        height:40,
-        justifyContent:'center',
-        backgroundColor:'white',
-        borderBottomWidth:0.2
-    },
+    // commentsBlock:{
+    //     width:'100%',
+    //     height:40,
+    //     justifyContent:'center',
+    //     backgroundColor:'white',
+    //     borderBottomWidth:0.2
+    // },
 
-    comments:{
-        marginLeft:'4%',
-        fontSize:16,
-    }
+    // comments:{
+    //     marginLeft:'4%',
+    //     fontSize:16,
+    // }
+    
 })
 
 const mapStateToProps=({postStat:postsStat})=>{

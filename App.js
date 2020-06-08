@@ -12,7 +12,8 @@ import ActivityScreen from './src/screens/ActivityScreen'
 import EditProfile from './src/screens/EditProfile'
 import MessagesScreen from './src/screens/MessagesScreen' 
 import ChatScreen from './src/screens/ChatScreen'
-import PostComments from './src/screens/PostComments'  
+import PostComments from './src/screens/PostComments'
+import SearchedProfileScreen from './src/screens/SearchedProfileScreen'  
 
 import {createStackNavigator} from '@react-navigation/stack'
 import {NavigationContainer} from '@react-navigation/native'
@@ -142,6 +143,13 @@ const App = () => {
             name="Comments"
             component={PostComments}
           />
+
+          <stack.Screen
+            name="SearchedProfile"
+            component={SearchedProfileScreen}
+            options={ { headerShown:false } }
+          />
+
 
       </stack.Navigator>
     </NavigationContainer>

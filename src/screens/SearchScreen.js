@@ -14,16 +14,9 @@ class SearchScreen extends Component {
         })
     }
 
-    render(){
-    return (
-        <View style={styles.container}>
-            <View style={styles.searchBlock}>
-                <View style={styles.searchBox}>
-                    <CustomSearchBox handleSearchInput={this.handleSearchInput}/>
-                </View>
-            </View>
-
-            <View style={styles.postsBlock}>
+    renderPosts=()=>{
+        return(
+            <View style={styles.contentBlock}>
                 <FlatList
                     data={[1,2,3,4,5,6,7,8,9,10,11,12]}
                     keyExtractor={item=>item}
@@ -37,6 +30,28 @@ class SearchScreen extends Component {
                     numColumns={3}
                 />
             </View>
+        )
+    }
+
+    renderSearchView=()=>{
+        return(
+            <View style={styles.contentBlock}>
+            </View>
+        )
+    }
+
+    render(){
+    return (
+        <View style={styles.container}>
+            <View style={styles.searchBlock}>
+                <View style={styles.searchBox}>
+                    <CustomSearchBox handleSearchInput={this.handleSearchInput}/>
+                </View>
+            </View>
+
+            {
+                this.state.searchInput.length > 0 ? this.renderSearchView() : this.renderPosts()
+            }
             
         </View>
     )
@@ -62,7 +77,7 @@ const styles=StyleSheet.create({
     },
 
 
-    postsBlock:{
+    contentBlock:{
         width:'100%',
         height:'88%',
     },
@@ -72,14 +87,15 @@ const styles=StyleSheet.create({
         flexDirection: 'column', 
         backgroundColor:'white',
         borderWidth:0.5,
-        margin:1
+        margin:1,
+        width:'100%'
     },
 
     postContent:{
         justifyContent: 'center',
         alignItems: 'center',
         height: 150,
-        width:150,
+        width:'99%',
         margin:1
     }
 })

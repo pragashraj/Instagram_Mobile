@@ -1,14 +1,14 @@
 import React from 'react'
 import { View, Text, StyleSheet , TouchableOpacity ,Image} from 'react-native'
 
-const CustomButton = ({btnTitle,icon,handleRegister}) => {
+const CustomButton = ({btnTitle,icon,handleRegister,registerBtn}) => {
     return (
         <TouchableOpacity onPress={()=>handleRegister()}>
-            <View style={{...styles.container}}>
+            <View style={registerBtn ? {...styles.container,...styles.RegisterBtn} : {...styles.container,...styles.nonRegisterBtn}}>
                 {
                     icon ? <Image source={require('../assets/icons/fb.png')}/> :null
                 }
-                <Text style={styles.btnText}>{btnTitle}</Text>
+                <Text style={registerBtn ? styles.RegisterBtnTxt : styles.nonRegisterBtnTxt}>{btnTitle}</Text>
             </View>
         </TouchableOpacity>
     )
@@ -16,7 +16,6 @@ const CustomButton = ({btnTitle,icon,handleRegister}) => {
 
 const styles=StyleSheet.create({
     container:{
-        backgroundColor:'#2A8EF2',
         width:'100%',
         height:'100%',
         borderRadius:6,
@@ -26,8 +25,21 @@ const styles=StyleSheet.create({
 
     },
 
-    btnText:{
+    nonRegisterBtn:{
+        backgroundColor:'white',
+        borderWidth:0.4
+    },
+
+    RegisterBtn:{
+        backgroundColor:'#2A8EF2',
+    },
+
+    RegisterBtnTxt:{
         color:'white',
+        fontSize:18
+    },
+
+    nonRegisterBtnTxt:{
         fontSize:18
     }
 

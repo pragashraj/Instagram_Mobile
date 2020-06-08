@@ -2,11 +2,13 @@ import React, { Component } from 'react'
 import { Text, View ,StyleSheet ,FlatList , Image} from 'react-native'
 
 import {database,fbase} from '../config/config'
+import Spinner from './Spinner'
 
 class OwnPosts extends Component {
     state={
-        emptiness:false,
-        posts:[]
+        emptiness:true,
+        posts:[],
+        loading:false
     }
 
     componentDidMount(){
@@ -15,6 +17,10 @@ class OwnPosts extends Component {
 
 
     fetchPosts=()=>{
+        this.setState({
+            loading:true
+        })
+        
         const uid=fbase.auth().currentUser.uid
         var data=[]
 
@@ -27,10 +33,10 @@ class OwnPosts extends Component {
         })
 
         this.setState({
-            posts:data
+            posts:data,
+            emptiness:false,
+            loading:false
         })
-
-        console.warn(this.state.posts)
 
     }
 
@@ -46,18 +52,24 @@ class OwnPosts extends Component {
     renderPosts=()=>{
         return(
             <View style={styles.PostsBlock}>
+
+                {
+                    this.state.loading ? <Spinner size="large"/>
+                    : 
                     <FlatList
-                        data={[1,2,3,4,5,6,7,8,9]}
+                        data={this.state.posts}
                         keyExtractor={item=>item}
                         renderItem={({item})=>{
                             return (
                                 <View style={styles.posts}>
-                                    <Image source={require('../assets/icons/post.jpg')} style={styles.postContent}/>
+                                    <Image source={{uri:item.posts.url}} style={styles.postContent}/>
                                 </View>
+                                
                             )
                         }}
                         numColumns={3}
                     />
+                }
             </View>
         )
     }
@@ -93,6 +105,7 @@ const styles=StyleSheet.create({
 
     PostsBlock:{
         width:'100%',
+        marginTop:'1%'
     },
 
     posts:{ 
