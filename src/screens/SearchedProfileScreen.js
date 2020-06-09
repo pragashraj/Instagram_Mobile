@@ -81,7 +81,11 @@ class SearchedProfileScreen extends Component {
                     </View>
 
                 </View>
-                <View style={styles.contentsBlock}></View>
+                <View style={styles.contentsBlock}>
+                    <View style={styles.contents}>
+                        <Image source={require('../assets/icons/locked.png')} style={styles.lockedImg}/>
+                    </View>
+                </View>
             </View>
         )
     }
@@ -127,7 +131,7 @@ const styles=StyleSheet.create({
 
     headerMain:{
         width:'100%',
-        height:'30%',
+        height:'25%',
         flexDirection:'row',
     },
 
@@ -176,8 +180,23 @@ const styles=StyleSheet.create({
 
     contentsBlock:{
         width:'100%',
-        height:'55%',
-        borderTopWidth:0.5
+        height:'60%',
+        borderTopWidth:0.5,
+    },
+
+    contents:{
+        width:'98%',
+        marginLeft:'1%',
+        height:'98%',
+        marginTop:'1%',
+        elevation:6,
+        borderWidth:0.1,
+        alignItems:'center',
+        justifyContent:'center'
+    },
+
+    lockedImg:{
+        alignSelf:'center',
     },
 
 })

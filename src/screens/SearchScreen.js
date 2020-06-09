@@ -1,13 +1,31 @@
 import React,{Component} from 'react'
-import { View , StyleSheet , FlatList , Image} from 'react-native'
+import { View , StyleSheet , FlatList , Image ,Text} from 'react-native'
 
 import CustomSearchBox from '../components/CustomSearchBox'
+import {database,fbase} from '../config/config'
 
 class SearchScreen extends Component {
     state={
-        searchInput:''
+        searchInput:'',
+        data:[],
+        searchedData:null
     }
     
+    componentDidMount(){
+        var data=[]
+        database.ref('AppUsers').on('value',function(snapshot){
+            snapshot.forEach(item => {
+                var temp = item.val() 
+                data.push(temp);
+                return false;
+            });
+        })
+        this.setState({
+            data:data
+        })
+    }
+
+
     handleSearchInput=(e)=>{
         this.setState({
             searchInput:e
@@ -33,9 +51,31 @@ class SearchScreen extends Component {
         )
     }
 
+    fetchAppUsers=(searchInput)=>{
+
+        const newData = this.state.data.filter(item => {     
+             const itemData = `${item.name}`;    
+             const textData = searchInput
+             return itemData.indexOf(textData) > -1;    
+          });
+
+        console.warn(newData)
+        // this.setState({
+        //     searchedData:newData.name
+        // })
+    }
+
     renderSearchView=()=>{
         return(
             <View style={styles.contentBlock}>
+                {
+                    this.fetchAppUsers(this.state.searchInput)
+                }
+                {
+                    // this.state.searchedData ? (
+                    //     <Text>{this.state.searchedData.name}</Text>
+                    // ) : null
+                }
             </View>
         )
     }

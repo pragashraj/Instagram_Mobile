@@ -82,7 +82,7 @@ class AddPostScreen extends Component{
             if(exist) author=snapshot.val()
         })
 
-        const ImageId=Math.floor(Math.random()*1000)
+        const ImageId=Math.floor(Math.random()*1000).toString()
 
         const res=await fetch(this.state.Imagefile.fileUri)
         const blob=await res.blob()
@@ -98,7 +98,7 @@ class AddPostScreen extends Component{
                         url:res,
                         posted:date.toString(),
                         caption:this.state.captionTxt,
-                        id:ImageId.toString(),
+                        id:ImageId,
                         authorId:uid
                    }
                })
@@ -110,6 +110,9 @@ class AddPostScreen extends Component{
                         showBtn:true,
                     })           
                 })
+
+                const stat={comments:{},likes:{authorLiked:false,count:0}}
+                database.ref(`PostStatistics/${ImageId}`).set(stat)
             })
 
         })//end of snapshot

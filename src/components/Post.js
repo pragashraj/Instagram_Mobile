@@ -13,13 +13,15 @@ class Post extends Component {
         likes:1,
         comments:null,
         stat:[],
-        profilePicUrl:''
+        profilePicUrl:'',
+        authorLiked:false
     }
 
     handleFetch=()=>{
         const id=this.props.post.id
         var commentsTmp=[]
         var likesTmp=0
+        var authorLiked=false
         database.ref('PostStatistics').child(id).once('value').then(snapshot=>{
             snapshot.child('comments').forEach(item => {
                 var temp = item.val()
@@ -33,8 +35,10 @@ class Post extends Component {
         database.ref('PostStatistics').child(id).once('value').then(snapshot=>{
             const exist=(snapshot.val()!==null)
             if(exist) likesTmp=snapshot.child('likes').child('count').val()
+            if(exist) authorLiked=snapshot.child('likes').child('authorLiked').val()
             this.setState({
-                likes:likesTmp
+                likes:likesTmp,
+                authorLiked:authorLiked
             }) 
         })
 
@@ -48,13 +52,14 @@ class Post extends Component {
             if(exist) url=snapshot.val()
         })
 
-        this.setState.apply({
+        this.setState({
             profilePicUrl:url
         })
     }
 
     componentDidMount(){
         this.handleFetch()
+        this.fetchProfilePic()
     }
 
     handleLike=()=>{
@@ -66,13 +71,15 @@ class Post extends Component {
         if(!this.state.liked){
             counts=this.state.likes + 1 ;
             database.ref('PostStatistics').child(id).child('likes').update({count:counts})
+            database.ref('PostStatistics').child(id).child('likes').update({authorLiked:true})
             this.handleFetch()
         }else{
-            counts=this.state.likes + - 1;
+            counts=this.state.likes - 1;
             database.ref('PostStatistics').child(id).child('likes').update({count:counts})
+            database.ref('PostStatistics').child(id).child('likes').update({authorLiked:false})
             this.handleFetch()
         }
-        this.props.setPostStatistics({postId:id,liked:this.state.liked})
+        // this.props.setPostStatistics({})
     }
 
     render(){
@@ -80,7 +87,11 @@ class Post extends Component {
             <View>
                 <View style={styles.postHeader}>
                     <View style={styles.proImageBlock}>
-                        <Image source={require('../assets/icons/proImage.png')} style={styles.proImage}/>
+                        <Image 
+                            source={this.state.profilePicUrl === '' ? require('../assets/icons/proImage.png')
+                            :{uri:this.state.profilePicUrl}} 
+                            style={styles.proImage}
+                        />
                     </View>
 
                     <View style={styles.postHolderBlock}>
@@ -101,7 +112,9 @@ class Post extends Component {
 
                 <View style={styles.userAction}>
                     <TouchableOpacity onPress={this.handleLike}>
-                        <Image source={this.props.postsStat.postsStat.liked ? require('../assets/icons/like.png'):  require('../assets/icons/afterLiked.png')} style={styles.actions}/>
+                        <Image 
+                            source={!this.state.authorLiked ? require('../assets/icons/like.png'):  require('../assets/icons/afterLiked.png')} 
+                            style={styles.actions}/>
                     </TouchableOpacity>
 
                     <TouchableOpacity onPress={()=>{
@@ -145,8 +158,9 @@ const styles=StyleSheet.create({
     },
 
     proImage:{
-        width:'65%',
-        height:'90%',
+        width:40,
+        height:40,
+        borderRadius:20
     },
 
     postHolderBlock:{
