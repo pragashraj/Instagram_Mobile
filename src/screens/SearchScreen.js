@@ -10,8 +10,8 @@ class SearchScreen extends Component {
         data:[],
         searchedData:null
     }
-    
-    componentDidMount(){
+
+    fetchAppUsers=()=>{
         var data=[]
         database.ref('AppUsers').on('value',function(snapshot){
             snapshot.forEach(item => {
@@ -24,6 +24,10 @@ class SearchScreen extends Component {
             data:data
         })
     }
+    
+    componentDidMount(){
+        this.fetchAppUsers()
+    }
 
 
     handleSearchInput=(e)=>{
@@ -31,6 +35,8 @@ class SearchScreen extends Component {
             searchInput:e
         })
     }
+
+   
 
     renderPosts=()=>{
         return(
@@ -51,7 +57,7 @@ class SearchScreen extends Component {
         )
     }
 
-    fetchAppUsers=(searchInput)=>{
+    filterAppUser=(searchInput)=>{
 
         const newData = this.state.data.filter(item => {     
              const itemData = `${item.name}`;    
@@ -69,7 +75,7 @@ class SearchScreen extends Component {
         return(
             <View style={styles.contentBlock}>
                 {
-                    this.fetchAppUsers(this.state.searchInput)
+                    this.filterAppUser(this.state.searchInput)
                 }
                 {
                     // this.state.searchedData ? (
