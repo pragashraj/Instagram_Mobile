@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Text, View , StyleSheet , Image , TouchableOpacity} from 'react-native'
 
 import CustomButton from '../components/CustomButton'
+import {database,fbase} from '../config/config'
 
 class SearchedProfileScreen extends Component {
     state={
@@ -10,10 +11,47 @@ class SearchedProfileScreen extends Component {
         },
         profilePicUrl:"",
         Statistics:{
-            posts:10,
-            followers:22,
-            following:25
+            posts:0,
+            followers:0,
+            following:0
         }
+    }
+
+    componentDidMount(){
+        const uid=this.props.route.params.id
+        var url=''
+        var details={
+            Bio:"",
+            Name:"user_name",
+            Username:'user_name',
+            Website:''
+        }
+        var statistics={
+            posts:0,
+            followers:0,
+            following:0
+        }
+        database.ref('ProfilePics').child(uid).child('Pic').on('value',function(snapshot){
+            const exist=(snapshot.val()!==null)
+            if(exist) url=snapshot.val()
+        })
+
+        database.ref('ProfileDetails').child(uid).on('value',function(snapshot){
+            const exist=(snapshot.val()!==null)
+            if(exist) details=snapshot.val()
+        })
+
+        database.ref('Statistics').child(uid).on('value',function(snapshot){
+            const exist=(snapshot.val()!==null)
+            if(exist) statistics=snapshot.val()
+        })
+
+
+        this.setState({
+            profilePicUrl:url,
+            profileDetails:details,
+            Statistics:statistics
+        })
     }
 
     handleFollowBtn=()=>{

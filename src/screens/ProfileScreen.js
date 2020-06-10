@@ -1,5 +1,5 @@
 import React,{Component} from 'react'
-import { View, Text ,StyleSheet , Image , TouchableOpacity} from 'react-native'
+import { View, Text ,StyleSheet , Image , TouchableOpacity , RefreshControl} from 'react-native'
 
 import settingimage from '../../src/assets/icons/settingimage.png'
 import CustomButton from '../components/CustomButton'
@@ -8,6 +8,7 @@ import {database,fbase} from '../config/config'
 
 import OwnPosts from '../components/OwnPosts'
 import SavedPost from '../components/SavedPost'
+import { withSafeAreaInsets } from 'react-native-safe-area-context'
 
 class ProfileScreen extends Component{
 
@@ -16,9 +17,33 @@ class ProfileScreen extends Component{
         profileDetails:{},
         gridView:true,
         calView:false,
-        Statistics:{}
+        Statistics:{},
+        refreshing:false
     }
 
+    // wait(timeout){
+    //     return new Promise(resolve=>{
+    //         setTimeout(resolve,timeout)
+    //     })
+    // }
+
+    // onRefresh=useCallback(() =>{
+    //     this.setState({
+    //         refreshing:true
+    //     })
+
+    //     this.wait(2000).then(()=>this.setState({refreshing:false}))
+        
+    // },[this.state.refreshing])
+
+    // onRefresh=()=>{
+    //     setInterval(() => {
+    //         this.setState({
+    //             refreshing:!this.state.refreshing
+    //         })
+    //     }, 2000);    
+    // }
+    
     componentDidMount(){
         const uid=fbase.auth().currentUser.uid
         var url=''
@@ -29,7 +54,7 @@ class ProfileScreen extends Component{
             Website:''
         }
         var statistics={
-            posts:1,
+            posts:0,
             followers:0,
             following:0
         }
@@ -68,7 +93,7 @@ class ProfileScreen extends Component{
                         <Text style={styles.username}>{this.state.profileDetails.Username}</Text>
                     </View>
                     
-                <TouchableOpacity style={styles.settings} onPress={()=>{this.props.navigation.navigate('SearchedProfile')}}>
+                <TouchableOpacity style={styles.settings}>
                         <Image source={settingimage} style={styles.settingImage}/>
                 </TouchableOpacity>
                 </View>

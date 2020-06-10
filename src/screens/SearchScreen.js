@@ -1,14 +1,15 @@
 import React,{Component} from 'react'
-import { View , StyleSheet , FlatList , Image ,Text} from 'react-native'
+import { View , StyleSheet , FlatList , Image ,Text ,TouchableOpacity} from 'react-native'
 
 import CustomSearchBox from '../components/CustomSearchBox'
-import {database,fbase} from '../config/config'
+import {database} from '../config/config'
 
 class SearchScreen extends Component {
     state={
         searchInput:'',
         data:[],
-        searchedData:null
+        searchedData:null,
+        noData:false
     }
 
     fetchAppUsers=()=>{
@@ -34,6 +35,15 @@ class SearchScreen extends Component {
         this.setState({
             searchInput:e
         })
+        const newData = this.state.data.filter(function(item) {
+            const itemData = item.name;
+            const textData = e.toLowerCase();
+            return itemData.indexOf(textData) > -1;
+          });
+          this.setState({
+            searchedData:newData
+          });
+
     }
 
    
@@ -57,30 +67,28 @@ class SearchScreen extends Component {
         )
     }
 
-    filterAppUser=(searchInput)=>{
-
-        const newData = this.state.data.filter(item => {     
-             const itemData = `${item.name}`;    
-             const textData = searchInput
-             return itemData.indexOf(textData) > -1;    
-          });
-
-        console.warn(newData)
-        // this.setState({
-        //     searchedData:newData.name
-        // })
-    }
 
     renderSearchView=()=>{
         return(
             <View style={styles.contentBlock}>
                 {
-                    this.filterAppUser(this.state.searchInput)
-                }
-                {
-                    // this.state.searchedData ? (
-                    //     <Text>{this.state.searchedData.name}</Text>
-                    // ) : null
+                    this.state.searchedData !== null ? 
+                    (
+                        <FlatList
+                            data={this.state.searchedData}
+                            key={Math.floor(Math.random*1000)}
+                            renderItem={({item})=>{
+                                return(
+                                   <TouchableOpacity onPress={()=>{this.props.navigation.navigate('SearchedProfile',{id:item.id})}}>
+                                        <View style={styles.searchedItem}>
+                                            <Image source={require('../assets/icons/proImage.png')} style={styles.searchedItemImage}/>
+                                            <Text style={styles.searchedItemName}>{item.name}</Text>
+                                        </View>
+                                   </TouchableOpacity>
+                                )
+                            }}
+                        />
+                    ) : null
                 }
             </View>
         )
@@ -143,7 +151,30 @@ const styles=StyleSheet.create({
         height: 150,
         width:'99%',
         margin:1
-    }
+    },
+
+    searchedItem:{
+        width:'96%',
+        marginLeft:'2%',
+        height:50,
+        marginTop:'2%',
+        elevation:4,
+        borderWidth:0.2,
+        flexDirection:'row',
+        alignItems:'center'
+    },
+
+    searchedItemImage:{
+        width:50,
+        height:50,
+        marginLeft:'5%'
+    },
+
+    searchedItemName:{
+        fontSize:19,
+        paddingLeft:'4%'
+    },
+
 })
 
 export default SearchScreen

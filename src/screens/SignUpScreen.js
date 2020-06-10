@@ -33,13 +33,16 @@ class SignUpScreen extends Component {
 
     handleRegister=()=>{
         const {email,password}=this.state
+        const {userName}=this.state
         this.setState({loading:true})
         auth.createUserWithEmailAndPassword(email,password).then(
             (user)=>{
                 this.setState({errorMessage:'',loading:false})
                 this.props.setCurrentAuth(user)
                 this.props.navigation.navigate('mainFlow')
-                database.ref(`User/${user.user.uid}/uid`).set(user.user.uid)            
+                database.ref(`User/${user.user.uid}/uid`).set(user.user.uid)
+                database.ref(`Statistics/${user.user.uid}`).set({followers:0,following:0,posts:0})
+                database.ref(`AppUsers/${userName}`).set({id:user.user.uid,name:userName})             
             }
         ).catch(
             (err)=>{

@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Text, View ,StyleSheet,Image ,TouchableOpacity,TextInput,FlatList,Modal,TouchableHighlight} from 'react-native'
+import { Text, View ,StyleSheet,Image ,TouchableOpacity,TextInput,FlatList,Modal,TouchableHighlight,ScrollView} from 'react-native'
 import ImagePicker from 'react-native-image-picker'
 import {connect} from 'react-redux'
 
@@ -57,9 +57,10 @@ class EditProfile extends Component {
         const {Name,Username,Website,Bio}=this.state
         const details={Name,Username,Website,Bio}
         const uid=fbase.auth().currentUser.uid
-        database.ref(`User/${uid}/uid`).set(details).then(()=>{
+        database.ref(`ProfileDetails/${uid}`).set(details).then(()=>{
             this.setState({loading:false})
         })
+       
     }
 
     launchCamera=()=>{
@@ -133,7 +134,7 @@ class EditProfile extends Component {
 
     render() {
         return (
-            <View style={styles.container}>
+            <ScrollView style={styles.container}>
                 <Modal
                     animationType="slide"
                     transparent={true}
@@ -192,7 +193,7 @@ class EditProfile extends Component {
                         ):<Spinner size="large"/>
                     }
                 </View>
-            </View>
+            </ScrollView>
         )
     }
 }
@@ -200,7 +201,7 @@ class EditProfile extends Component {
 const styles=StyleSheet.create({
     container:{
         backgroundColor:'white',
-        flex:1
+        // flex:1
     },
 
     ImageSelector:{
