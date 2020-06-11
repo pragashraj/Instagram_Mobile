@@ -8,7 +8,7 @@ import {database,fbase} from '../config/config'
 
 import OwnPosts from '../components/OwnPosts'
 import SavedPost from '../components/SavedPost'
-import { withSafeAreaInsets } from 'react-native-safe-area-context'
+
 
 class ProfileScreen extends Component{
 
@@ -21,29 +21,6 @@ class ProfileScreen extends Component{
         refreshing:false
     }
 
-    // wait(timeout){
-    //     return new Promise(resolve=>{
-    //         setTimeout(resolve,timeout)
-    //     })
-    // }
-
-    // onRefresh=useCallback(() =>{
-    //     this.setState({
-    //         refreshing:true
-    //     })
-
-    //     this.wait(2000).then(()=>this.setState({refreshing:false}))
-        
-    // },[this.state.refreshing])
-
-    // onRefresh=()=>{
-    //     setInterval(() => {
-    //         this.setState({
-    //             refreshing:!this.state.refreshing
-    //         })
-    //     }, 2000);    
-    // }
-    
     componentDidMount(){
         const uid=fbase.auth().currentUser.uid
         var url=''
@@ -188,7 +165,7 @@ const styles=StyleSheet.create({
     },
 
     username:{
-        marginLeft:'12%',
+        marginLeft:'8%',
         fontSize:25
     },
 

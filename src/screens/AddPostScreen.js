@@ -120,16 +120,18 @@ class AddPostScreen extends Component{
 
     renderBtnCard=()=>{
         return(
-            <View style={styles.btnCard}>
-                <Text style={styles.chooseTxt}>Choose here</Text>
-                <View style={styles.btnContainer}>
-                    <TouchableOpacity style={styles.btnSelector} onPress={this.handleCameraBtnPress}>
-                        <Text style={styles.btnText}>Camera</Text>
-                    </TouchableOpacity>
+            <View>
+                <View style={styles.btnCard}>
+                    <Text style={styles.chooseTxt}>Choose here</Text>
+                    <View style={styles.btnContainer}>
+                        <TouchableOpacity style={styles.btnSelector} onPress={this.handleCameraBtnPress}>
+                            <Text style={styles.btnText}>Camera</Text>
+                        </TouchableOpacity>
 
-                    <TouchableOpacity style={styles.btnSelector} onPress={this.handleGalleryBtnPress}>
-                        <Text style={styles.btnText}>Gallery</Text>
-                    </TouchableOpacity>
+                        <TouchableOpacity style={styles.btnSelector} onPress={this.handleGalleryBtnPress}>
+                            <Text style={styles.btnText}>Gallery</Text>
+                        </TouchableOpacity>
+                    </View>
                 </View>
             </View>
         )

@@ -32,9 +32,11 @@ const styles=StyleSheet.create({
     },
 
     newActivity:{
-        width:'100%',
+        width:'98%',
         height:'30%',
-        backgroundColor:'white'
+        marginLeft:'1%',
+        backgroundColor:'white',
+        elevation:6
     },
 
     Text:{
@@ -44,9 +46,12 @@ const styles=StyleSheet.create({
     },
 
     oldActivity:{
-        width:'100%',
-        height:'60%',
-        backgroundColor:'white'
+        width:'98%',
+        height:'58%',
+        marginTop:'2%',
+        marginLeft:'1%',
+        backgroundColor:'white',
+        elevation:6
     },
 
 })

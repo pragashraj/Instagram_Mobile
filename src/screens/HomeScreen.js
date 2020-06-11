@@ -1,5 +1,5 @@
 import React,{Component} from 'react'
-import { View, Text , StyleSheet , Image , TouchableOpacity,FlatList} from 'react-native'
+import { View, Text , StyleSheet , Image , TouchableOpacity,FlatList,RefreshControl} from 'react-native'
 
 import Post from '../components/Post'
 import StoryComponent from '../components/StoryComponent'
@@ -17,6 +17,7 @@ class HomeScreen extends Component{
         source:{
             uri:''
         },
+        refreshing:false,
     }
 
      options={
@@ -24,6 +25,11 @@ class HomeScreen extends Component{
             skipBackup:true,
             path:'images'
         }
+    }
+
+    onRefresh = () => {
+        this.setState({refreshing: true});
+        this.fetchData()
     }
 
     launchCameraComponent= ()=>{
@@ -44,7 +50,7 @@ class HomeScreen extends Component{
         })
     }
 
-    componentDidMount(){
+    fetchData=()=>{
         const uid=fbase.auth().currentUser.uid
         var data=[]
         var url=''
@@ -66,9 +72,14 @@ class HomeScreen extends Component{
         this.setState({
             posts:data,
             profilePicUrl:url,
+            refreshing: false
         })
 
         this.props.setProDetails(url)
+    }
+
+    componentDidMount(){
+        this.fetchData()
     }
 
     render(){
@@ -112,6 +123,13 @@ class HomeScreen extends Component{
                                     post={item.posts}
                                 />
                         }}
+
+                        refreshControl={
+                            <RefreshControl
+                                refreshing={this.state.refreshing}
+                                onRefresh={this.onRefresh}
+                            />
+                        }
                     />  
                 </View>
             </View>

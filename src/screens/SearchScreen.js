@@ -1,5 +1,5 @@
 import React,{Component} from 'react'
-import { View , StyleSheet , FlatList , Image ,Text ,TouchableOpacity} from 'react-native'
+import { View , StyleSheet , FlatList , Image ,Text ,TouchableOpacity,RefreshControl} from 'react-native'
 
 import CustomSearchBox from '../components/CustomSearchBox'
 import {database} from '../config/config'
@@ -9,7 +9,13 @@ class SearchScreen extends Component {
         searchInput:'',
         data:[],
         searchedData:null,
-        noData:false
+        noData:false,
+        refreshing:false
+    }
+
+    onRefresh = () => {
+        this.setState({refreshing: true});
+        this.fetchAppUsers()
     }
 
     fetchAppUsers=()=>{
@@ -22,7 +28,8 @@ class SearchScreen extends Component {
             });
         })
         this.setState({
-            data:data
+            data:data,
+            refreshing: false
         })
     }
     
@@ -62,6 +69,12 @@ class SearchScreen extends Component {
                         )
                     }}
                     numColumns={3}
+                    refreshControl={
+                        <RefreshControl
+                            refreshing={this.state.refreshing}
+                            onRefresh={this.onRefresh}
+                        />
+                    }
                 />
             </View>
         )

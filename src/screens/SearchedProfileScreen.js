@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Text, View , StyleSheet , Image , TouchableOpacity} from 'react-native'
+import { Text, View , StyleSheet , Image , TouchableOpacity } from 'react-native'
 
 import CustomButton from '../components/CustomButton'
 import {database,fbase} from '../config/config'
@@ -14,11 +14,21 @@ class SearchedProfileScreen extends Component {
             posts:0,
             followers:0,
             following:0
-        }
+        },
+
+        mystatistics:{
+            posts:0,
+            followers:0,
+            following:0
+        },
+        followedByMyself:false,
     }
 
-    componentDidMount(){
+
+    fetchData=()=>{
+        const myId=fbase.auth().currentUser.uid
         const uid=this.props.route.params.id
+
         var url=''
         var details={
             Bio:"",
@@ -39,6 +49,7 @@ class SearchedProfileScreen extends Component {
         database.ref('ProfileDetails').child(uid).on('value',function(snapshot){
             const exist=(snapshot.val()!==null)
             if(exist) details=snapshot.val()
+
         })
 
         database.ref('Statistics').child(uid).on('value',function(snapshot){
@@ -46,16 +57,75 @@ class SearchedProfileScreen extends Component {
             if(exist) statistics=snapshot.val()
         })
 
+        var mystatistics={
+            posts:0,
+            followers:0,
+            following:0
+        }
+        database.ref('Statistics').child(myId).on('value',function(snapshot){
+            const exist=(snapshot.val()!==null)
+            if(exist) mystatistics=snapshot.val()
+        })
+
+        var followedByMyself=false
+        database.ref('User').child(myId).child('following').on('value',function(snapshot){
+            snapshot.forEach(item => {
+                if(item.val()===uid) followedByMyself=true
+                
+            });
+        })
+
+
+
 
         this.setState({
             profilePicUrl:url,
             profileDetails:details,
-            Statistics:statistics
+            Statistics:statistics,
+            mystatistics:mystatistics,
+            followedByMyself:followedByMyself
         })
+
+    }
+
+    componentDidMount(){
+       this.fetchData()
     }
 
     handleFollowBtn=()=>{
+        const myId=fbase.auth().currentUser.uid
+        const uid=this.props.route.params.id
 
+        if(myId===uid){
+            return
+        }else
+        {
+            if(!this.state.followedByMyself){
+                database.ref('User').child(myId).child('following').child(uid).set({id:uid})
+                database.ref('User').child(uid).child('followers').child(myId).set({id:myId})
+
+                var counts=this.state.Statistics.followers
+                database.ref('Statistics').child(uid).update({followers:counts+1})
+                var myCounts=this.state.mystatistics.following
+                database.ref('Statistics').child(myId).update({following:myCounts+1})
+
+                this.fetchData()
+            }else{
+                database.ref('User').child(myId).child('following').child(uid).remove()
+                database.ref('User').child(uid).child('followers').child(myId).remove()
+
+                var counts=this.state.Statistics.followers
+                database.ref('Statistics').child(uid).update({followers:counts-1})
+                var myCounts=this.state.mystatistics.following
+                database.ref('Statistics').child(myId).update({following:myCounts-1})
+                this.fetchData()
+
+                this.setState({
+                    followedByMyself:false
+                })
+                
+            }
+        }
     }
 
     handleMessageBtn=()=>{
@@ -102,7 +172,7 @@ class SearchedProfileScreen extends Component {
                     
                     <View style={styles.btn}>
                         <CustomButton 
-                            btnTitle="Follow" 
+                            btnTitle={this.state.followedByMyself ? "UnFollow": "Follow"} 
                             icon={false} 
                             handleRegister={this.handleFollowBtn} 
                             registerBtn={false}    
@@ -151,7 +221,7 @@ const styles=StyleSheet.create({
     },
 
     username:{
-        marginLeft:'12%',
+        marginLeft:'8%',
         fontSize:25
     },
 
