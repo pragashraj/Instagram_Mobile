@@ -96,10 +96,7 @@ class SearchedProfileScreen extends Component {
         const myId=fbase.auth().currentUser.uid
         const uid=this.props.route.params.id
 
-        if(myId===uid){
-            return
-        }else
-        {
+        
             if(!this.state.followedByMyself){
                 database.ref('User').child(myId).child('following').child(uid).set({id:uid})
                 database.ref('User').child(uid).child('followers').child(myId).set({id:myId})
@@ -125,7 +122,7 @@ class SearchedProfileScreen extends Component {
                 })
                 
             }
-        }
+        
     }
 
     handleMessageBtn=()=>{

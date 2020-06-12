@@ -132,7 +132,7 @@ class ProfileScreen extends Component{
                 </View>
 
                 <View style={styles.contentsBlock}>
-                    {this.state.gridView ? <OwnPosts/> : <SavedPost/>}
+                    {this.state.gridView ? <OwnPosts navigation={this.props.navigation}/> : <SavedPost/>}
                 </View>
             </View>
         )

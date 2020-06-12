@@ -1,6 +1,6 @@
 import React, {Component } from 'react'
 import { Text, View , StyleSheet , Image , TouchableOpacity} from 'react-native'
-import {database} from '../config/config'
+import {database,fbase} from '../config/config'
 
 import {connect} from 'react-redux'
 
@@ -19,6 +19,7 @@ class Post extends Component {
 
     handleFetch=()=>{
         const id=this.props.post.id
+        const myId=fbase.auth().currentUser.uid
         var commentsTmp=[]
         var likesTmp=0
         var authorLiked=false
@@ -35,7 +36,7 @@ class Post extends Component {
         database.ref('PostStatistics').child(id).once('value').then(snapshot=>{
             const exist=(snapshot.val()!==null)
             if(exist) likesTmp=snapshot.child('likes').child('count').val()
-            if(exist) authorLiked=snapshot.child('likes').child('authorLiked').val()
+            if(exist) authorLiked=snapshot.child('likes').child(myId).val()
             this.setState({
                 likes:likesTmp,
                 authorLiked:authorLiked
@@ -67,16 +68,17 @@ class Post extends Component {
             liked:!this.state.liked
         })
         const id=this.props.post.id
+        const myId=fbase.auth().currentUser.uid
         var counts
-        if(!this.state.liked){
+        if(!this.state.authorLiked){
             counts=this.state.likes + 1 ;
             database.ref('PostStatistics').child(id).child('likes').update({count:counts})
-            database.ref('PostStatistics').child(id).child('likes').update({authorLiked:true})
+            database.ref('PostStatistics').child(id).child('likes').child(myId).set({liked:true})
             this.handleFetch()
         }else{
             counts=this.state.likes - 1;
             database.ref('PostStatistics').child(id).child('likes').update({count:counts})
-            database.ref('PostStatistics').child(id).child('likes').update({authorLiked:false})
+            database.ref('PostStatistics').child(id).child('likes').child(myId).remove()
             this.handleFetch()
         }
         // this.props.setPostStatistics({})
@@ -214,21 +216,6 @@ const styles=StyleSheet.create({
         marginLeft:'4%',
         fontSize:16,
     },
-
-
-    // commentsBlock:{
-    //     width:'100%',
-    //     height:40,
-    //     justifyContent:'center',
-    //     backgroundColor:'white',
-    //     borderBottomWidth:0.2
-    // },
-
-    // comments:{
-    //     marginLeft:'4%',
-    //     fontSize:16,
-    // }
-    
 })
 
 const mapStateToProps=({postStat:postsStat})=>{

@@ -2,7 +2,7 @@ import React,{Component} from 'react'
 import { View , StyleSheet , FlatList , Image ,Text ,TouchableOpacity,RefreshControl} from 'react-native'
 
 import CustomSearchBox from '../components/CustomSearchBox'
-import {database} from '../config/config'
+import {database,fbase} from '../config/config'
 
 class SearchScreen extends Component {
     state={
@@ -53,7 +53,15 @@ class SearchScreen extends Component {
 
     }
 
-   
+    handleNavigationToScreen=(id)=>{
+        this.setState({
+            searchInput:''
+        });
+
+        this.props.navigation.navigate('SearchedProfile',{id:id})
+    }
+
+
 
     renderPosts=()=>{
         return(
@@ -80,7 +88,7 @@ class SearchScreen extends Component {
         )
     }
 
-
+  
     renderSearchView=()=>{
         return(
             <View style={styles.contentBlock}>
@@ -91,8 +99,9 @@ class SearchScreen extends Component {
                             data={this.state.searchedData}
                             key={Math.floor(Math.random*1000)}
                             renderItem={({item})=>{
+                                if(item.id === fbase.auth().currentUser.uid) return null
                                 return(
-                                   <TouchableOpacity onPress={()=>{this.props.navigation.navigate('SearchedProfile',{id:item.id})}}>
+                                   <TouchableOpacity onPress={()=>this.handleNavigationToScreen(item.id)}>
                                         <View style={styles.searchedItem}>
                                             <Image source={require('../assets/icons/proImage.png')} style={styles.searchedItemImage}/>
                                             <Text style={styles.searchedItemName}>{item.name}</Text>
@@ -112,7 +121,7 @@ class SearchScreen extends Component {
         <View style={styles.container}>
             <View style={styles.searchBlock}>
                 <View style={styles.searchBox}>
-                    <CustomSearchBox handleSearchInput={this.handleSearchInput}/>
+                    <CustomSearchBox handleSearchInput={this.handleSearchInput} values={this.state.searchInput}/>
                 </View>
             </View>
 

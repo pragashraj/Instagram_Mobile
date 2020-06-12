@@ -21,6 +21,7 @@ class CustomSearchBox extends Component {
                     style={styles.textInput}
                     placeholder="search"
                     onChangeText={(e)=>this.props.handleSearchInput(e)}
+                    defaultValue={this.props.values}
                 />
             </View>
         )

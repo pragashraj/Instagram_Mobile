@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Text, View ,StyleSheet ,FlatList , Image} from 'react-native'
+import { Text, View ,StyleSheet ,FlatList , Image , RefreshControl,TouchableOpacity} from 'react-native'
 
 import {database,fbase} from '../config/config'
 import Spinner from './Spinner'
@@ -8,7 +8,8 @@ class OwnPosts extends Component {
     state={
         emptiness:true,
         posts:[],
-        loading:false
+        loading:false,
+        refreshing:false,
     }
 
     componentDidMount(){
@@ -35,9 +36,15 @@ class OwnPosts extends Component {
         this.setState({
             posts:data,
             emptiness:false,
-            loading:false
+            loading:false,
+            refreshing: false
         })
 
+    }
+
+    onRefresh = () => {
+        this.setState({refreshing: true});
+        this.fetchPosts()
     }
 
     renderMessage=()=>{
@@ -62,12 +69,23 @@ class OwnPosts extends Component {
                         renderItem={({item})=>{
                             return (
                                 <View style={styles.posts}>
-                                    <Image source={{uri:item.posts.url}} style={styles.postContent}/>
+                                    <TouchableOpacity onPress={()=>{
+                                        const post=item.posts
+                                        this.props.navigation.navigate('Comments',{post})
+                                    }}>
+                                        <Image source={{uri:item.posts.url}} style={styles.postContent}/>
+                                    </TouchableOpacity>
                                 </View>
                                 
                             )
                         }}
                         numColumns={3}
+                        refreshControl={
+                            <RefreshControl
+                                refreshing={this.state.refreshing}
+                                onRefresh={this.onRefresh}
+                            />
+                        }
                     />
                 }
             </View>

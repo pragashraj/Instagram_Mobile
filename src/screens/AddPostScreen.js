@@ -77,6 +77,14 @@ class AddPostScreen extends Component{
         this.setState({loading:true})
         const uid=fbase.auth().currentUser.uid
         let author
+
+        var mystatistics={
+            posts:0,
+            followers:0,
+            following:0
+        }
+
+
         database.ref('ProfileDetails').child(uid).child("Name").on('value',function(snapshot){
             const exist=(snapshot.val()!==null)
             if(exist) author=snapshot.val()
@@ -113,6 +121,14 @@ class AddPostScreen extends Component{
 
                 const stat={comments:{},likes:{authorLiked:false,count:0}}
                 database.ref(`PostStatistics/${ImageId}`).set(stat)
+
+                database.ref('Statistics').child(uid).on('value',function(snapshot){
+                    const exist=(snapshot.val()!==null)
+                    if(exist) mystatistics=snapshot.val()
+                })
+
+
+                database.ref(`Statistics`).child(uid).update({posts:mystatistics.posts+1})
             })
 
         })//end of snapshot

@@ -55,11 +55,25 @@ class HomeScreen extends Component{
         var data=[]
         var url=''
 
+        database.ref('User').child(uid).child('following').on('value',function(snapshot){
+            snapshot.forEach(item => {
+                database.ref('Posts').child(item.val().id).on('value',function(snapshot){
+                    const exist=(snapshot.val()!==null)
+                    if(exist){
+                        snapshot.forEach(item => {
+                            var temp = { posts: item.val() };
+                            data.push(temp);
+                        });
+                    }                
+                })
+            });
+        })
+
         database.ref('Posts').child(uid).on('value',function(snapshot){
             snapshot.forEach(item => {
                 var temp = { posts: item.val() };
                 data.push(temp);
-                return false;
+                // return false;
             });
         })
 
