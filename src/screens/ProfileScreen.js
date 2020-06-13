@@ -1,5 +1,5 @@
 import React,{Component} from 'react'
-import { View, Text ,StyleSheet , Image , TouchableOpacity , RefreshControl} from 'react-native'
+import { View, Text ,StyleSheet , Image , TouchableOpacity } from 'react-native'
 
 import settingimage from '../../src/assets/icons/settingimage.png'
 import CustomButton from '../components/CustomButton'
@@ -8,6 +8,8 @@ import {database,fbase} from '../config/config'
 
 import OwnPosts from '../components/OwnPosts'
 import SavedPost from '../components/SavedPost'
+
+import {setCurrentAuth} from '../redux/actions/setAuth'
 
 
 class ProfileScreen extends Component{
@@ -18,7 +20,8 @@ class ProfileScreen extends Component{
         gridView:true,
         calView:false,
         Statistics:{},
-        refreshing:false
+        refreshing:false,
+        settings:false,
     }
 
     componentDidMount(){
@@ -62,17 +65,54 @@ class ProfileScreen extends Component{
         this.props.navigation.navigate('Edit_Profile')
     }
 
+    handleSettingBtn=()=>{
+        this.setState({
+             settings:true
+        })       
+    }
+
+    handleClearBtn=()=>{
+        this.setState({
+            settings:false
+        })
+    }
+
+    handleCheckBtn=()=>{
+        this.setState({
+            settings:false
+        })
+        this.props.setCurrentAuth(null)
+        this.props.navigation.navigate('authFlow')
+    }
+
     render(){
         return (
             <View style={styles.container}>
                 <View style={styles.header}>
                     <View style={styles.usernmeBlock}>
-                        <Text style={styles.username}>{this.state.profileDetails.Username}</Text>
+                        {
+                            !this.state.settings ? 
+                            <Text style={styles.username}>{this.state.profileDetails.Username}</Text>
+                            :
+                            <Text style={styles.username}>signOut</Text>
+                        }
                     </View>
                     
-                <TouchableOpacity style={styles.settings}>
-                        <Image source={settingimage} style={styles.settingImage}/>
-                </TouchableOpacity>
+                        {
+                            !this.state.settings ? 
+                                <TouchableOpacity style={styles.settings} onPress={this.handleSettingBtn}>
+                                    <Image source={settingimage} style={styles.settingImage}/>
+                                </TouchableOpacity> 
+                            : 
+                            <View style={styles.settings}>
+                                <TouchableOpacity style={styles.signout}  onPress={this.handleClearBtn}>
+                                    <Image source={require('../assets/icons/clear.png')} style={styles.signoutImage}/>
+                                </TouchableOpacity>
+                                <TouchableOpacity style={styles.signout}  onPress={this.handleCheckBtn}>
+                                    <Image source={require('../assets/icons/check.png')} style={styles.signoutImage}/>
+                                </TouchableOpacity>
+                            </View>
+                        }
                 </View>
 
                 <View style={styles.headerMain}>
@@ -174,11 +214,23 @@ const styles=StyleSheet.create({
         height:'100%',
         justifyContent:'center',
         alignItems:'center',
+        flexDirection:'row'
+    },
+
+    signout:{
+        width:'100%',
+        height:'100%',
+        justifyContent:'center',
+    },
+
+    signoutImage:{
+        width: '30%',
+        height: '35%',
     },
 
     settingImage:{
-        width: '50%',
-        height: '50%',
+        width: '35%',
+        height: '35%',
     },
 
     headerMain:{
@@ -286,6 +338,7 @@ const styles=StyleSheet.create({
         marginLeft:'2%',
     },
 
+
 })
 
 const mapStateToProps=({profileInfo:{proDetails}})=>{
@@ -294,4 +347,10 @@ const mapStateToProps=({profileInfo:{proDetails}})=>{
     }
 }
 
-export default connect(mapStateToProps)(ProfileScreen)
+const mapDispatchToProps=dispatch=>{
+    return{
+        setCurrentAuth:user=>dispatch(setCurrentAuth(user))
+    }
+}
+
+export default connect(mapStateToProps,mapDispatchToProps)(ProfileScreen)
