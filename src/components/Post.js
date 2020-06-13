@@ -87,11 +87,30 @@ class Post extends Component {
     }
 
 
-    savePost=(myId)=>{
-        // database.ref('SavedPosts').child(myId).child(postId).set(savedPost)
+    savePost=(post,myId)=>{
+        const postId=post.id
+        database.ref('SavedPosts').child(myId).child(postId).set(post)
     }
 
-    renderAlert=(title,msg,postId,myId)=>{
+    deletePost=(post,myId)=>{
+        const postId=post.id
+        var mystatistics={
+            posts:0,
+            followers:0,
+            following:0
+        }
+
+        database.ref('Posts').child(myId).child(postId).remove()
+        database.ref('PostStatistics').child(postId).remove()
+
+        database.ref('Statistics').child(myId).on('value',function(snapshot){
+            const exist=(snapshot.val()!==null)
+            if(exist) mystatistics=snapshot.val()
+        })            
+        database.ref('Statistics').child(myId).update({posts:mystatistics.posts-1})
+    }
+
+    renderAlert=(title,msg,post,myId,func)=>{
         Alert.alert(
             title,
             msg,
@@ -101,8 +120,9 @@ class Post extends Component {
                 },
                 { 
                     text: "oK", 
-                    onPress: () => {
-                        this.savedPost(myId)
+                    onPress: () =>{
+                        func==="save" ?  this.savePost(post,myId) : 
+                            func==="delete" ? this.deletePost(post,myId) : null
                     }
                 }
             ],
@@ -113,59 +133,16 @@ class Post extends Component {
     handleMoreBtn=()=>{
         const authorId=this.props.post.authorId
         const postId=this.props.post.id
-        const savedPost={postId,authorId}
         const myId=fbase.auth().currentUser.uid
-        var mystatistics={
-            posts:0,
-            followers:0,
-            following:0
-        }
+        const post=this.props.post
 
         if(authorId!==myId){
-            Alert.alert(
-                "Alert!",
-                "Do You Want To Save this Post ? ",
-                [
-                    {
-                    text: "cancel",onPress: () => console.log("Cancel Pressed")
-                    },
-                    { 
-                        text: "oK", 
-                        onPress: () => {
-                            database.ref('SavedPosts').child(myId).child(postId).set(savedPost)
-                        }
-                    }
-                ],
-                { cancelable: false }
-            )
+            this.renderAlert("Alert!","Do You Want To Save this Post ? " ,post , myId,"save")
         }
         else
         {
-            Alert.alert(
-                "Alert!",
-                "Do You Like To Delete this Post ? ",
-                [
-                    {
-                    text: "cancel",onPress: () => console.log("Cancel Pressed")
-                    },
-                    { 
-                        text: "oK", 
-                        onPress: () => {
-                            database.ref('Posts').child(myId).child(postId).remove()
-                            database.ref('PostStatistics').child(postId).remove()
-
-                            database.ref('Statistics').child(myId).on('value',function(snapshot){
-                                const exist=(snapshot.val()!==null)
-                                if(exist) mystatistics=snapshot.val()
-                            })            
-                            database.ref('Statistics').child(myId).update({posts:mystatistics.posts-1})
-                        }
-                    }
-                ],
-                { cancelable: false }
-            )
+            this.renderAlert("Alert!","Do You Like To Delete this Post ? " , post, myId,"delete")
         }
-
     }
 
     render(){

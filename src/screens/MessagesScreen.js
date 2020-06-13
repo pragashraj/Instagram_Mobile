@@ -4,7 +4,7 @@ import {View,Text,StyleSheet,FlatList} from 'react-native'
 import CustomSearchBox from '../components/CustomSearchBox'
 import MessageBox from '../components/MessageBox'
 
-import {fbase} from '../config/config'
+import {database,fbase} from '../config/config'
 
 
 class MessagesScreen extends Component{
@@ -14,7 +14,8 @@ class MessagesScreen extends Component{
             {messId:1,name:"Mr.John",newIndicator:true},
             {messId:2,name:"Spr_Raj",newIndicator:false},
             {messId:3,name:"Mr.Kamal",newIndicator:false},
-        ]
+        ],
+        data:[]
     }
 
     handleSearchInput=(e)=>{
@@ -23,8 +24,28 @@ class MessagesScreen extends Component{
         })
     }
 
+    fetchDatas=()=>{
+        const myId=fbase.auth().currentUser.uid
+        var data=[]
+        // database.ref('chats').child(myId).once('value').then(snapshot=>{
+        //     snapshot.forEach(item => {
+        //         var temp = item.val()
+        //         // data.push(temp);
+        //         console.warn(item)
+        //     })
+        //     // console.warn(data.length)
+        //     // this.setState({
+        //     //     data:data
+        //     // })
+        // })
+
+        database.ref('chats').child(myId).on('value',function(snapshot){
+            console.warn(snapshot.val())
+        })
+    }
+
     componentDidMount(){
-        const uid=fbase.auth().currentUser.uid
+        this.fetchDatas()
     }
 
     render(){
