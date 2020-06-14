@@ -6,11 +6,21 @@ import Chat from '../components/Chat'
 class ChatScreen extends Component {
     state={
         chatInput:'',
-        dummyChat:[
-             { key:'0',txt:"Hi",styleType:"own"},
-             { key:'1',txt:"Hi",styleType:"opo"},
-             {key:'2',txt:"How are You?",styleType:"own"},
-             { key:'3',txt:"Iam Fine How about You?",styleType:"opo"}]
+        chat:[],       
+    }
+
+    componentDidMount(){
+        const chatMsg=this.props.route.params.item.messages
+        const len=chatMsg.length
+        var chatList=[]
+        for(var i=0;i<len;i++){
+            const chatData={key:i.toString(),txt:chatMsg[i].message,styleType:chatMsg[i].type}
+            chatList.push(chatData)
+        }
+
+        this.setState({
+            chat:chatList
+        })
     }
 
     handleInput=(e)=>{
@@ -22,11 +32,8 @@ class ChatScreen extends Component {
     render() {
         return (
             <View style={styles.container}>
-                {
-                    console.log(this.props.route.params.name)
-                }
                <FlatList
-                    data={this.state.dummyChat}
+                    data={this.state.chat}
                     keyExtractor={item=>item.key}
                     renderItem={({item})=>{
                         return(

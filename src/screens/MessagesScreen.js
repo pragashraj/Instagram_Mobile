@@ -10,12 +10,7 @@ import {database,fbase} from '../config/config'
 class MessagesScreen extends Component{
     state={
         searchInput:'',
-        message:[
-            {messId:1,name:"Mr.John",newIndicator:true},
-            {messId:2,name:"Spr_Raj",newIndicator:false},
-            {messId:3,name:"Mr.Kamal",newIndicator:false},
-        ],
-        data:[]
+        data:[],
     }
 
     handleSearchInput=(e)=>{
@@ -24,28 +19,43 @@ class MessagesScreen extends Component{
         })
     }
 
-    fetchDatas=()=>{
+    fetchMessagers=()=>{
         const myId=fbase.auth().currentUser.uid
         var data=[]
-        // database.ref('chats').child(myId).once('value').then(snapshot=>{
-        //     snapshot.forEach(item => {
-        //         var temp = item.val()
-        //         // data.push(temp);
-        //         console.warn(item)
-        //     })
-        //     // console.warn(data.length)
-        //     // this.setState({
-        //     //     data:data
-        //     // })
-        // })
+        var messages=[]
+        var messagerId
+        var temp
+        var name
+        database.ref('chats').child(myId).once('value').then(snapshot=>{
+            snapshot.forEach(item => {
+                item.forEach(msg=>{
+                    temp = msg.val()
+                    messagerId=temp.authorId
+                    const message=temp.message
+                    const type =temp.type
+                    messages.push({message,type})
+                    console.warn(messagerId)
+                })
+                database.ref('ProfileDetails').child(messagerId).on('value',function(snapshot){
+                    const exist=(snapshot.val()!==null)
+                    if(exist) temp=snapshot.val()
+                    name=temp.Username
+                })
+                const dataContents={messagerId,name,messages}
+                data.push(dataContents)
+                console.warn("next")
+            })
 
-        database.ref('chats').child(myId).on('value',function(snapshot){
-            console.warn(snapshot.val())
+            this.setState({
+                data:data
+            })
+           
+            // console.warn(this.state.data)
         })
     }
 
     componentDidMount(){
-        this.fetchDatas()
+        this.fetchMessagers()
     }
 
     render(){
@@ -61,11 +71,11 @@ class MessagesScreen extends Component{
                     <Text style={styles.messTxt}>Messages</Text>
                     <View style={styles.messBx}>
                         <FlatList
-                            data={this.state.message}
-                            keyExtractor={item=>item.messId}
+                            data={this.state.data}
+                            keyExtractor={item=>item.messagerId}
                             renderItem={({item})=>{
                                 return(
-                                    <MessageBox name={item.name} navigation={this.props.navigation} newIndicator={item.newIndicator}/>
+                                    <MessageBox navigation={this.props.navigation} item={item}/>
                                 )
                             }}
                         />

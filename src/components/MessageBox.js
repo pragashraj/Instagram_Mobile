@@ -1,22 +1,22 @@
 import React from 'react'
 import { View, Text,Image,StyleSheet,TouchableOpacity } from 'react-native'
 
-const MessageBox = ({name,navigation,newIndicator}) => {
+const MessageBox = ({navigation,newIndicator,item}) => {
     return (
         <View style={styles.container}>
-            <TouchableOpacity onPress={()=>navigation.navigate('Chats',{name})}>
+            <TouchableOpacity onPress={()=>navigation.navigate('Chats',{item})}>
                 <View style={styles.block}>
                     <View style={styles.imageBlock}>
                         <Image source={require('../assets/icons/nonStory.png')} style={styles.image}/>
                     </View>
                 
                     <View style={styles.nameBlock}>
-                        <Text style={styles.name}>{name}</Text>
+                        <Text style={styles.name}>{item.name}</Text>
                     </View>
                     
                     <View style={styles.newBlock}>
                         {
-                            newIndicator ? <Image source={require('../assets/icons/newMess.png')} style={styles.new}/> :null
+                           // newIndicator ? <Image source={require('../assets/icons/newMess.png')} style={styles.new}/> :null
                         }
                     </View>              
                 </View>
