@@ -22,6 +22,7 @@ class SearchedProfileScreen extends Component {
             following:0
         },
         followedByMyself:false,
+        data:{},
     }
 
 
@@ -68,15 +69,11 @@ class SearchedProfileScreen extends Component {
         })
 
         var followedByMyself=false
-        database.ref('User').child(myId).child('following').on('value',function(snapshot){
+        database.ref('User').child(myId).child('following').once('value',function(snapshot){
             snapshot.forEach(item => {
-                if(item.val()===uid) followedByMyself=true
-                
+                if(item.val().id===uid)  followedByMyself=true
             });
         })
-
-
-
 
         this.setState({
             profilePicUrl:url,
@@ -87,6 +84,34 @@ class SearchedProfileScreen extends Component {
         })
 
     }
+
+
+    // fetchChats=()=>{
+    //     const myId=fbase.auth().currentUser.uid
+    //     const uid=this.props.route.params.id
+
+    //     var messages=[]
+    //     var dataContents={}
+    //     var messagerId=uid
+    //     var temp
+    //     var name=this.state.profileDetails.Username
+
+    //     database.ref('chats').child(myId).child(uid).once('value').then(snapshot=>{
+    //         snapshot.forEach(item => {
+    //             temp=item.val()
+    //             const message=temp.message
+    //             const type =temp.type
+    //             messages.push({message,type})
+    //         })
+    //         dataContents={messagerId,name,messages}
+
+    //     }).then(()=>{
+    //         this.setState({
+    //             data:dataContents
+    //          })
+    //     })
+        
+    // }
 
     componentDidMount(){
        this.fetchData()
@@ -107,6 +132,9 @@ class SearchedProfileScreen extends Component {
                 database.ref('Statistics').child(myId).update({following:myCounts+1})
 
                 this.fetchData()
+                this.setState({
+                    followedByMyself:true
+                })
             }else{
                 database.ref('User').child(myId).child('following').child(uid).remove()
                 database.ref('User').child(uid).child('followers').child(myId).remove()
@@ -126,7 +154,8 @@ class SearchedProfileScreen extends Component {
     }
 
     handleMessageBtn=()=>{
-        
+        const uid=this.props.route.params.id
+        this.props.navigation.navigate('Chats',{uid})
     }
 
     render() {

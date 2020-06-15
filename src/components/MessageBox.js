@@ -4,7 +4,10 @@ import { View, Text,Image,StyleSheet,TouchableOpacity } from 'react-native'
 const MessageBox = ({navigation,newIndicator,item}) => {
     return (
         <View style={styles.container}>
-            <TouchableOpacity onPress={()=>navigation.navigate('Chats',{item})}>
+            <TouchableOpacity onPress={()=>{
+                const uid=item.messagerId
+                navigation.navigate('Chats',{uid})}
+            }>
                 <View style={styles.block}>
                     <View style={styles.imageBlock}>
                         <Image source={require('../assets/icons/nonStory.png')} style={styles.image}/>

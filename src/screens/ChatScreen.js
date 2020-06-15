@@ -1,32 +1,104 @@
 import React, { Component } from 'react'
-import { Image, View,StyleSheet ,TextInput,TouchableOpacity,FlatList} from 'react-native'
+import { Image, View,StyleSheet ,TextInput,TouchableOpacity,FlatList ,Alert } from 'react-native'
 
 import Chat from '../components/Chat'
+import {database,fbase} from '../config/config'
 
 class ChatScreen extends Component {
     state={
         chatInput:'',
-        chat:[],       
+        chat:[],
+        data:{},
+        lastMsgId:0,       
+    }
+
+    renderChats=()=>{
+        const myId=fbase.auth().currentUser.uid
+        const uid=this.props.route.params.uid
+        var messages=[]
+        var dataContents={}
+        var messagerId=uid
+        var temp
+        var lastMsgId
+
+        database.ref('chats').child(myId).child(uid).once('value').then(snapshot=>{
+            snapshot.forEach(item => {
+                temp=item.val()
+                const message=temp.message
+                const type =temp.type
+                lastMsgId=temp.id
+                messages.push({message,type})
+            })
+            dataContents={messagerId,messages}
+            
+        }).then(()=>{
+            const chatMsg=dataContents.messages
+            const len=chatMsg.length
+            var chatList=[]
+            for(var i=0;i<len;i++){
+                const chatData={key:(i+1).toString(),txt:chatMsg[i].message,styleType:chatMsg[i].type}
+                chatList.push(chatData)
+            }
+    
+            this.setState({
+                chat:chatList,
+                lastMsgId:lastMsgId
+            })
+        }) 
     }
 
     componentDidMount(){
-        const chatMsg=this.props.route.params.item.messages
-        const len=chatMsg.length
-        var chatList=[]
-        for(var i=0;i<len;i++){
-            const chatData={key:i.toString(),txt:chatMsg[i].message,styleType:chatMsg[i].type}
-            chatList.push(chatData)
-        }
-
-        this.setState({
-            chat:chatList
-        })
+        this.renderChats()
     }
 
     handleInput=(e)=>{
         this.setState({
             chatInput:e
         })
+    }
+
+    renderAlert=(key,type)=>{
+        const myId=fbase.auth().currentUser.uid
+        const authorId=this.props.route.params.uid
+        Alert.alert(
+            "Alert",
+            "Are You Sure To Delete this Message?",
+            [
+                {
+                text: "cancel",onPress: () => console.log("Cancel Pressed")
+                },
+                { 
+                    text: "oK", 
+                    onPress: () =>{
+                        if(type==="own"){
+                            database.ref('chats').child(myId).child(authorId).child(key).remove()
+                            database.ref('chats').child(authorId).child(myId).child(key).remove()
+                            this.renderChats()
+                        }
+                    }
+                }
+            ],
+            { cancelable: true }
+        )
+    }
+
+    sendChatMessage=()=>{
+        const message=this.state.chatInput
+        const myId=fbase.auth().currentUser.uid
+        const authorId=this.props.route.params.uid
+        const id=this.state.lastMsgId + 1 ;
+
+        const data1={authorId,id,message,type:"own"}
+        const data2={authorId,id,message,type:"opo"}
+
+        if(message.length > 0){     
+             database.ref('chats').child(myId).child(authorId).child(id).set(data1)
+             database.ref('chats').child(authorId).child(myId).child(id).set(data2)
+             this.renderChats()
+             this.setState({
+                chatInput:''
+             })
+        }
     }
 
     render() {
@@ -38,7 +110,9 @@ class ChatScreen extends Component {
                     renderItem={({item})=>{
                         return(
                             <View style={styles.chatContainer}>
-                                <Chat txt={item.txt} styleType={item.styleType}/>
+                                <TouchableOpacity onLongPress={()=>this.renderAlert(item.key,item.styleType)}>
+                                    <Chat txt={item.txt} styleType={item.styleType}/>
+                                </TouchableOpacity>
                             </View>
                         )
                     }}
@@ -49,8 +123,9 @@ class ChatScreen extends Component {
                         style={styles.chatInputField}
                         onChangeText={(e)=>this.handleInput(e)}
                         placeholder="Your Text Here"
+                        defaultValue={this.state.chatInput}
                     />
-                    <TouchableOpacity style={styles.sendImgBlock}>
+                    <TouchableOpacity style={styles.sendImgBlock} onPress={this.sendChatMessage}>
                         <Image 
                             source={require('../assets/icons/sendChat.png')} 
                             style={styles.sendImg}

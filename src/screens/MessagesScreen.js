@@ -34,7 +34,6 @@ class MessagesScreen extends Component{
                     const message=temp.message
                     const type =temp.type
                     messages.push({message,type})
-                    console.warn(messagerId)
                 })
                 database.ref('ProfileDetails').child(messagerId).on('value',function(snapshot){
                     const exist=(snapshot.val()!==null)
@@ -43,14 +42,13 @@ class MessagesScreen extends Component{
                 })
                 const dataContents={messagerId,name,messages}
                 data.push(dataContents)
-                console.warn("next")
+                messages=[]
             })
 
             this.setState({
                 data:data
             })
            
-            // console.warn(this.state.data)
         })
     }
 
