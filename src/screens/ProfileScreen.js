@@ -11,6 +11,8 @@ import SavedPost from '../components/SavedPost'
 
 import {setCurrentAuth} from '../redux/actions/setAuth'
 
+import PTRView from 'react-native-pull-to-refresh'
+
 
 class ProfileScreen extends Component{
 
@@ -85,9 +87,16 @@ class ProfileScreen extends Component{
         this.props.navigation.navigate('authFlow')
     }
 
+    onRefresh=()=>{
+        return new Promise((resolve) => {
+            setTimeout(()=>{resolve()}, 2000)
+        });
+    }
+
+
     render(){
         return (
-            <View style={styles.container}>
+            <View style={styles.container}>    
                 <View style={styles.header}>
                     <View style={styles.usernmeBlock}>
                         {
@@ -175,9 +184,11 @@ class ProfileScreen extends Component{
                     {
                         this.state.gridView ? <OwnPosts navigation={this.props.navigation}/> 
                     : <SavedPost navigation={this.props.navigation}/>
-                }
+                    }
                 </View>
+
             </View>
+
         )
 
     }
