@@ -85,34 +85,6 @@ class SearchedProfileScreen extends Component {
 
     }
 
-
-    // fetchChats=()=>{
-    //     const myId=fbase.auth().currentUser.uid
-    //     const uid=this.props.route.params.id
-
-    //     var messages=[]
-    //     var dataContents={}
-    //     var messagerId=uid
-    //     var temp
-    //     var name=this.state.profileDetails.Username
-
-    //     database.ref('chats').child(myId).child(uid).once('value').then(snapshot=>{
-    //         snapshot.forEach(item => {
-    //             temp=item.val()
-    //             const message=temp.message
-    //             const type =temp.type
-    //             messages.push({message,type})
-    //         })
-    //         dataContents={messagerId,name,messages}
-
-    //     }).then(()=>{
-    //         this.setState({
-    //             data:dataContents
-    //          })
-    //     })
-        
-    // }
-
     componentDidMount(){
        this.fetchData()
     }

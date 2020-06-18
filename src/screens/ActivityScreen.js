@@ -1,22 +1,49 @@
-import React from 'react'
-import { View, Text ,StyleSheet } from 'react-native'
+import React ,{Component} from 'react'
+import { View, Text ,StyleSheet ,FlatList} from 'react-native'
 
-const ActivityScreen = () => {
-    return (
-        <View>
-            <View style={styles.header}>
-                <Text style={styles.headerText}>Activity</Text>
-            </View>
+import {connect} from 'react-redux'
 
-            <View style={styles.newActivity}>
-                <Text style={styles.Text}>Today</Text>
-            </View>
+class ActivityScreen extends Component {
+    state={
+        today:[]
+    }
 
-            <View style={styles.oldActivity}>
-                <Text style={styles.Text}>This Month</Text>
+    componentDidMount(){
+        this.setState({
+            today:this.props.todayActivities
+        })
+    }
+
+    render(){
+        return (
+            <View>
+                <View style={styles.header}>
+                    <Text style={styles.headerText}>Activity</Text>
+                </View>
+
+                <View style={styles.newActivity}>
+                    <Text style={styles.Text}>Today</Text>
+                    {
+                        this.state.today.length > 0  ? (
+                            <FlatList
+                                data={this.state.today}
+                                // keyExtractor={}
+                                renderItem={({item})=>{
+                                    return <View>
+                                        {console.warn(item)}
+                                    </View>
+                                }}
+                            />
+                        ):console.warn(this.state.today.length)
+                    }
+                </View>
+
+                <View style={styles.oldActivity}>
+                    <Text style={styles.Text}>This Month</Text>
+                </View>
             </View>
-        </View>
-    )
+        )
+    }
 }
 
 const styles=StyleSheet.create({
@@ -33,7 +60,7 @@ const styles=StyleSheet.create({
 
     newActivity:{
         width:'98%',
-        height:'30%',
+        height:'50%',
         marginLeft:'1%',
         backgroundColor:'white',
         elevation:6
@@ -47,7 +74,7 @@ const styles=StyleSheet.create({
 
     oldActivity:{
         width:'98%',
-        height:'58%',
+        height:'38%',
         marginTop:'2%',
         marginLeft:'1%',
         backgroundColor:'white',
@@ -55,4 +82,11 @@ const styles=StyleSheet.create({
     },
 
 })
-export default ActivityScreen
+
+const mapStateToProps=({activity:{todayActivities}})=>{
+    return{
+        todayActivities
+    }
+}
+
+export default connect(mapStateToProps) (ActivityScreen)

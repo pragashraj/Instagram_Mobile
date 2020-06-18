@@ -117,7 +117,6 @@ class SignUpScreen extends Component {
 const styles=StyleSheet.create({
 
     container:{
-        // flex: 1,
         alignItems:'center'
     },
 
@@ -125,7 +124,6 @@ const styles=StyleSheet.create({
     TextBlock:{
         width:'90%',
         height:50,
-        // marginLeft:'5%',
         justifyContent:'center',
         alignItems:'center',
         marginTop:'8%'
@@ -149,13 +147,11 @@ const styles=StyleSheet.create({
         width:'90%',
         height:40,
         marginTop:'10%'
-        // marginLeft:'5%',
     },
 
     orBlock:{
         width:'90%',
         height:18,
-        // marginLeft:'5%',
         justifyContent:'center',
         alignItems:'center',
     },
@@ -168,7 +164,6 @@ const styles=StyleSheet.create({
     formBlock:{
         width:'90%',
         height:200,
-        // marginLeft:'5%',
         marginTop:'5%'
     },
 
@@ -179,17 +174,13 @@ const styles=StyleSheet.create({
     loginBtn:{
         width:'100%',
         height:40,
-        // marginTop:'5%',
         marginTop:'5%'
     },
-
 
 
     TermBlock:{
         width:'90%',
         height:50,
-        // marginLeft:'5%',
-        // justifyContent:'center',
         alignItems:'center',
         marginTop:'35%'
     },

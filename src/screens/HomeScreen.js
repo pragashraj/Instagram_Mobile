@@ -9,6 +9,7 @@ import {connect} from 'react-redux'
 
 import {setProDetails} from '../redux/actions/setProfileDetails'
 import ImagePicker from 'react-native-image-picker'
+import Spinner from '../components/Spinner'
 
 class HomeScreen extends Component{
     state={
@@ -18,6 +19,7 @@ class HomeScreen extends Component{
             uri:''
         },
         refreshing:false,
+        loading:true
     }
 
      options={
@@ -42,7 +44,18 @@ class HomeScreen extends Component{
                 console.log('User tapped custom button: ', response.customButton);
                 alert(response.customButton);
             }else{
-                const source={uri:response.uri}
+                const date=new Date()
+                const created={
+                    Hour:date.getHours(),
+                    Minutes:date.getMinutes(),
+                    Date:date.getDate(),
+                    Month:date.getMonth(),
+                    Year:date.getFullYear()
+                }
+                const source={
+                    uri:response.uri,
+                    created
+                }
                 this.setState({
                     source:source
                 })
@@ -73,7 +86,6 @@ class HomeScreen extends Component{
             snapshot.forEach(item => {
                 var temp = { posts: item.val() };
                 data.push(temp);
-                // return false;
             });
         })
 
@@ -86,7 +98,8 @@ class HomeScreen extends Component{
         this.setState({
             posts:data,
             profilePicUrl:url,
-            refreshing: false
+            refreshing: false,
+            loading:false
         })
 
         this.props.setProDetails(url)
@@ -128,7 +141,9 @@ class HomeScreen extends Component{
                 </View>
 
                 <View style={styles.posts}>
-                    <FlatList
+                    {
+                        this.state.loading ? <Spinner size="large"/> :
+                        <FlatList
                         data={this.state.posts}
                         keyExtractor={item=>item.posts.posted}
                         renderItem={({item})=>{
@@ -144,7 +159,7 @@ class HomeScreen extends Component{
                                 onRefresh={this.onRefresh}
                             />
                         }
-                    />  
+                    />  }
                 </View>
             </View>
         )

@@ -1,8 +1,14 @@
 import React ,{Component} from 'react'
 import { View,Text,TouchableOpacity,StyleSheet,ScrollView,TextInput ,Image} from 'react-native'
+
 import ImagePicker from 'react-native-image-picker'
+
 import {storage,database,fbase} from '../config/config'
 import Spinner from '../components/Spinner'
+
+import {connect} from 'react-redux'
+
+import {setTodayActivities} from '../redux/actions/AddActivity'
 
 class AddPostScreen extends Component{
 
@@ -30,6 +36,15 @@ class AddPostScreen extends Component{
             skipBackup:true,
             path:'images',
         }
+    }
+
+
+    componentDidMount(){
+        const date=new Date()
+        this.props.setTodayActivities({
+            id:date.toString(),
+            act:"You have added a post on "+date.toString()
+        })
     }
 
     handleGalleryBtnPress=()=>{
@@ -129,6 +144,8 @@ class AddPostScreen extends Component{
 
 
                 database.ref(`Statistics`).child(uid).update({posts:mystatistics.posts+1})
+                
+                this.props.setTodayActivities(`You have added a post on ${date}`)
             })
 
         })//end of snapshot
@@ -274,6 +291,16 @@ const styles=StyleSheet.create({
     }
 })
 
+const mapDispatchToProps=dispatch=>{
+    return{
+        setTodayActivities:ActivityData=>dispatch(setTodayActivities(ActivityData))
+    }
+}
 
+const mapStateToProps=({activity:{todayActivities}})=>{
+    return{
+        todayActivities
+    }
+}
 
-export default AddPostScreen
+export default connect(mapStateToProps,mapDispatchToProps)(AddPostScreen)

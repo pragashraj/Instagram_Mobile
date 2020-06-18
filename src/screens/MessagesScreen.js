@@ -5,12 +5,13 @@ import CustomSearchBox from '../components/CustomSearchBox'
 import MessageBox from '../components/MessageBox'
 
 import {database,fbase} from '../config/config'
-
+import Spinner from '../components/Spinner'
 
 class MessagesScreen extends Component{
     state={
         searchInput:'',
         data:[],
+        loading:true
     }
 
     handleSearchInput=(e)=>{
@@ -26,6 +27,7 @@ class MessagesScreen extends Component{
         var messagerId
         var temp
         var name
+        var loading
         database.ref('chats').child(myId).once('value').then(snapshot=>{
             snapshot.forEach(item => {
                 item.forEach(msg=>{
@@ -43,10 +45,12 @@ class MessagesScreen extends Component{
                 const dataContents={messagerId,name,messages}
                 data.push(dataContents)
                 messages=[]
+                loading=false
             })
 
             this.setState({
-                data:data
+                data:data,
+                loading:loading
             })
            
         })
@@ -68,7 +72,9 @@ class MessagesScreen extends Component{
                 <View style={styles.messagesBlock}>
                     <Text style={styles.messTxt}>Messages</Text>
                     <View style={styles.messBx}>
-                        <FlatList
+                        {
+                            this.state.loading ? <Spinner size="large"/>:
+                            <FlatList
                             data={this.state.data}
                             keyExtractor={item=>item.messagerId}
                             renderItem={({item})=>{
@@ -76,7 +82,7 @@ class MessagesScreen extends Component{
                                     <MessageBox navigation={this.props.navigation} item={item}/>
                                 )
                             }}
-                        />
+                        />}
                     </View>
                 </View>
             </View>

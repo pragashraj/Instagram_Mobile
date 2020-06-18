@@ -3,13 +3,15 @@ import { Image, View,StyleSheet ,TextInput,TouchableOpacity,FlatList ,Alert } fr
 
 import Chat from '../components/Chat'
 import {database,fbase} from '../config/config'
+import Spinner from '../components/Spinner'
 
 class ChatScreen extends Component {
     state={
         chatInput:'',
         chat:[],
         data:{},
-        lastMsgId:0,       
+        lastMsgId:0,
+        loading:true       
     }
 
     renderChats=()=>{
@@ -42,7 +44,8 @@ class ChatScreen extends Component {
     
             this.setState({
                 chat:chatList,
-                lastMsgId:lastMsgId
+                lastMsgId:lastMsgId,
+                loading:false
             })
         }) 
     }
@@ -104,7 +107,9 @@ class ChatScreen extends Component {
     render() {
         return (
             <View style={styles.container}>
-               <FlatList
+               {
+                this.state.loading ? <Spinner size="large"/>:   
+                <FlatList
                     data={this.state.chat}
                     keyExtractor={item=>item.key}
                     renderItem={({item})=>{
@@ -117,7 +122,7 @@ class ChatScreen extends Component {
                         )
                     }}
                />
-
+}
                <View style={styles.chatInputBlock}>
                     <TextInput
                         style={styles.chatInputField}
