@@ -8,7 +8,7 @@ import Spinner from '../components/Spinner'
 
 import {connect} from 'react-redux'
 
-import {setTodayActivities} from '../redux/actions/AddActivity'
+import {setTodayActivities,setMonthActivities,clearTodayActivities} from '../redux/actions/AddActivity'
 
 class AddPostScreen extends Component{
 
@@ -38,15 +38,6 @@ class AddPostScreen extends Component{
         }
     }
 
-
-    componentDidMount(){
-        const date=new Date()
-        this.props.setTodayActivities({
-            id:date.toString(),
-            act:"You have added a post on "+date.toString()
-        })
-    }
-
     handleGalleryBtnPress=()=>{
         ImagePicker.launchImageLibrary(this.options,(response)=>{
             if (response.didCancel) {
@@ -62,6 +53,7 @@ class AddPostScreen extends Component{
                     },
                     showBtn:false
                 })
+                
             } 
         })
     }
@@ -145,10 +137,41 @@ class AddPostScreen extends Component{
 
                 database.ref(`Statistics`).child(uid).update({posts:mystatistics.posts+1})
                 
-                this.props.setTodayActivities(`You have added a post on ${date}`)
+                this.setReducerState()
+
             })
 
         })//end of snapshot
+    }
+
+    setTodayActivity=()=>{
+        const date=new Date()
+        this.props.setTodayActivities({
+            id:date.toString(),
+            date:{
+                date:date.getDate(),
+                hrs:date.getHours(),
+                min:date.getMinutes()
+            },
+            act:"You have added a post on "+date.toString()
+        })
+    }
+
+    setReducerState=()=>{
+        const date=new Date()
+        const data=this.props.todayActivities
+        const len=data.length
+        if( len > 0){
+            if(date.getDate()-data[len-1].date.date>=1){
+                this.props.setMonthActivities(data)
+                this.props.clearTodayActivities()
+                this.setTodayActivity()
+            }else{
+                this.setTodayActivity()
+            }
+        }else{
+            this.setTodayActivity()
+        }
     }
 
     renderBtnCard=()=>{
@@ -293,13 +316,16 @@ const styles=StyleSheet.create({
 
 const mapDispatchToProps=dispatch=>{
     return{
-        setTodayActivities:ActivityData=>dispatch(setTodayActivities(ActivityData))
+        setTodayActivities:ActivityData=>dispatch(setTodayActivities(ActivityData)),
+        setMonthActivities:ActivityData=>dispatch(setMonthActivities(ActivityData)),
+        clearTodayActivities:()=>dispatch(clearTodayActivities())
     }
 }
 
-const mapStateToProps=({activity:{todayActivities}})=>{
+const mapStateToProps=({activity:{todayActivities,monthActivities}})=>{
     return{
-        todayActivities
+        todayActivities,
+        monthActivities
     }
 }
 

@@ -5,12 +5,14 @@ import {connect} from 'react-redux'
 
 class ActivityScreen extends Component {
     state={
-        today:[]
+        today:[],
+        month:[]
     }
 
     componentDidMount(){
         this.setState({
-            today:this.props.todayActivities
+            today:this.props.todayActivities,
+            month:this.props.monthActivities
         })
     }
 
@@ -26,20 +28,33 @@ class ActivityScreen extends Component {
                     {
                         this.state.today.length > 0  ? (
                             <FlatList
-                                data={this.state.today}
-                                // keyExtractor={}
+                                data={this.props.todayActivities}
+                                keyExtractor={item=>item.id}
                                 renderItem={({item})=>{
-                                    return <View>
-                                        {console.warn(item)}
+                                    return <View style={styles.todayList}>
+                                        <Text style={styles.listDataText}>{item.act}</Text>
                                     </View>
                                 }}
                             />
-                        ):console.warn(this.state.today.length)
+                        ):null
                     }
                 </View>
 
                 <View style={styles.oldActivity}>
                     <Text style={styles.Text}>This Month</Text>
+                    {
+                        this.state.today.length > 0  ? (
+                            <FlatList
+                                data={this.props.monthActivities}
+                                keyExtractor={item=>item.id}
+                                renderItem={({item})=>{
+                                    return <View style={styles.todayList}>
+                                        <Text style={styles.listDataText}>{item.act}</Text>
+                                    </View>
+                                }}
+                            />
+                        ):null
+                    }
                 </View>
             </View>
         )
@@ -69,7 +84,7 @@ const styles=StyleSheet.create({
     Text:{
         fontSize:20,
         marginLeft:'3%',
-        marginTop:'2%'
+        marginTop:'2%',
     },
 
     oldActivity:{
@@ -81,11 +96,29 @@ const styles=StyleSheet.create({
         elevation:6
     },
 
+    todayList:{
+        padding:'2%',
+        marginTop:'1%',
+        backgroundColor:'lightgray',
+        marginBottom:'1%',
+        width:'98%',
+        marginLeft:"1%",
+        elevation:1,
+        borderRadius:10
+    },
+
+    listDataText:{
+        fontSize:13,
+        color:'white',
+        fontWeight:'bold'
+    },
+
 })
 
-const mapStateToProps=({activity:{todayActivities}})=>{
+const mapStateToProps=({activity:{todayActivities,monthActivities}})=>{
     return{
-        todayActivities
+        todayActivities,
+        monthActivities
     }
 }
 

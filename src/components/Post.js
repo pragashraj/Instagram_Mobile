@@ -5,6 +5,7 @@ import {database,fbase} from '../config/config'
 import {connect} from 'react-redux'
 
 import {setPostStatistics} from '../redux/actions/firebaseActions'
+import {setTodayActivities,setMonthActivities,clearTodayActivities} from '../redux/actions/AddActivity'
 
 class Post extends Component {
 
@@ -64,6 +65,35 @@ class Post extends Component {
         this.fetchProfilePic()
     }
 
+    setTodayActivity=()=>{
+        const date=new Date()
+        this.props.setTodayActivities({
+            id:date.toString(),
+            date:{
+                date:date.getDate(),
+                hrs:date.getHours(),
+                min:date.getMinutes()
+            },
+            act:"You have Liked a post on "+date.toString()
+        })
+    }
+
+    setReducerState=()=>{
+        const date=new Date()
+        const data=this.props.todayActivities
+        const len=data.length
+        if( len > 0){
+            if(date.getDate()-data[len-1].date.date>=1){
+                this.props.setMonthActivities(data)
+                this.props.clearTodayActivities()
+                this.setTodayActivity()
+            }else{
+                this.setTodayActivity()
+            }
+        }else{
+            this.setTodayActivity()
+        }
+    }
 
 
     handleLike=()=>{
@@ -78,6 +108,7 @@ class Post extends Component {
             database.ref('PostStatistics').child(id).child('likes').update({count:counts})
             database.ref('PostStatistics').child(id).child('likes').child(myId).set({liked:true})
             this.handleFetch()
+            this.setReducerState()
         }else{
             counts=this.state.likes - 1;
             database.ref('PostStatistics').child(id).child('likes').update({count:counts})
@@ -279,15 +310,20 @@ const styles=StyleSheet.create({
     },
 })
 
-const mapStateToProps=({postStat:postsStat})=>{
+const mapStateToProps=({postStat:postsStat,activity:{todayActivities,monthActivities}})=>{
     return{
-        postsStat
+        postsStat,
+        todayActivities,
+        monthActivities
     }
 }
 
 const mapDispatchToProps=(dispatch)=>{
     return{
-        setPostStatistics:postData=>dispatch(setPostStatistics(postData))
+        setPostStatistics:postData=>dispatch(setPostStatistics(postData)),
+        setTodayActivities:ActivityData=>dispatch(setTodayActivities(ActivityData)),
+        setMonthActivities:ActivityData=>dispatch(setMonthActivities(ActivityData)),
+        clearTodayActivities:()=>dispatch(clearTodayActivities())
     }
 }
 
