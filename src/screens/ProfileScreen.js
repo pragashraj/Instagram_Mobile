@@ -11,8 +11,6 @@ import SavedPost from '../components/SavedPost'
 
 import {setCurrentAuth} from '../redux/actions/setAuth'
 
-import PTRView from 'react-native-pull-to-refresh'
-
 
 class ProfileScreen extends Component{
 

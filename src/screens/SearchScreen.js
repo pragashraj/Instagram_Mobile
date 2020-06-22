@@ -9,7 +9,6 @@ class SearchScreen extends Component {
         searchInput:'',
         data:[],
         searchedData:null,
-        noData:false,
         refreshing:false
     }
 
@@ -70,7 +69,7 @@ class SearchScreen extends Component {
                 <FlatList
                     data={[1,2,3,4,5,6,7,8,9,10,11,12]}
                     keyExtractor={item=>item}
-                    renderItem={({item})=>{
+                    renderItem={()=>{
                         return (
                             <View style={styles.posts}>
                                 <Image source={require('../assets/icons/post.jpg')} style={styles.postContent}/>

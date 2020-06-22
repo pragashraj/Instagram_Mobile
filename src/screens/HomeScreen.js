@@ -46,11 +46,11 @@ class HomeScreen extends Component{
             }else{
                 const date=new Date()
                 const created={
-                    Hour:date.getHours(),
-                    Minutes:date.getMinutes(),
-                    Date:date.getDate(),
-                    Month:date.getMonth(),
-                    Year:date.getFullYear()
+                    Hour:date.getHours().toString(),
+                    Minutes:date.getMinutes().toString(),
+                    Date:date.getDate().toString(),
+                    Month:date.getMonth().toString(),
+                    Year:date.getFullYear().toString()
                 }
                 const source={
                     uri:response.uri,
@@ -59,6 +59,8 @@ class HomeScreen extends Component{
                 this.setState({
                     source:source
                 })
+
+                console.warn(created)
             } 
         })
     }
